@@ -2130,18 +2130,40 @@ const luxuryHTML = `<!DOCTYPE html>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
+        // Initialize AOS when ready
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 1000,
+                once: true,
+                offset: 100
+            });
+        }
         
-        // Preloader
+        // Preloader - hide after DOM is ready (don't wait for all images)
+        // Use both DOMContentLoaded and a fallback timeout
+        function hidePreloader() {
+            const preloader = document.querySelector('.preloader');
+            if (preloader && !preloader.classList.contains('hidden')) {
+                preloader.classList.add('hidden');
+            }
+        }
+        
+        // Hide preloader after 2.5 seconds max (fallback)
+        setTimeout(hidePreloader, 2500);
+        
+        // Also try to hide when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(hidePreloader, 1500);
+            });
+        } else {
+            // DOM is already ready
+            setTimeout(hidePreloader, 1500);
+        }
+        
+        // Also hide on window load as backup
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.querySelector('.preloader').classList.add('hidden');
-            }, 2000);
+            setTimeout(hidePreloader, 500);
         });
         
         // Navbar Scroll Effect
@@ -2180,14 +2202,14 @@ const luxuryHTML = `<!DOCTYPE html>
         
         // Chat Functionality
         const chatResponses = {
-            'services': 'We offer a wide range of premium catering services including Corporate Catering, Royal & Government Events, Weddings, VIP Hospitality, Mega Outdoor Events, and Industrial Catering. Would you like details about any specific service?',
-            'prices': 'Our pricing varies based on the event type, guest count, and menu selection. For a personalized quote, please fill out our contact form or call us at +971 2 555 1234.',
-            'booking': 'To book our services: 1) Contact us via phone or form, 2) Discuss your requirements, 3) Receive a customized proposal, 4) Confirm your booking. We recommend booking at least 2-4 weeks in advance for larger events.',
-            'menu': 'We offer diverse menu options including International, Arabic, Asian, and Continental cuisines. Our chefs can also create custom menus tailored to your preferences and dietary requirements.',
-            'wedding': 'Our wedding packages include menu customization, service staff, elegant presentation, and coordination with your event planner. We create magical culinary experiences for your special day.',
-            'corporate': 'Corporate catering includes executive lunches, conferences, product launches, and team events. We ensure professional service and quality that reflects your company\'s standards.',
-            'contact': 'You can reach us at: Phone: +971 2 555 1234, WhatsApp: +971 50 123 4567, Email: info@goldenglobecatering.com, or visit us at M38, Industrial Area, Mussaffah, Abu Dhabi.',
-            'default': 'Thank you for your interest! For detailed information, please contact our team directly at +971 2 555 1234 or fill out our contact form. Would you like me to help with anything else?'
+            "services": "We offer a wide range of premium catering services including Corporate Catering, Royal & Government Events, Weddings, VIP Hospitality, Mega Outdoor Events, and Industrial Catering. Would you like details about any specific service?",
+            "prices": "Our pricing varies based on the event type, guest count, and menu selection. For a personalized quote, please fill out our contact form or call us at +971 2 555 1234.",
+            "booking": "To book our services: 1) Contact us via phone or form, 2) Discuss your requirements, 3) Receive a customized proposal, 4) Confirm your booking. We recommend booking at least 2-4 weeks in advance for larger events.",
+            "menu": "We offer diverse menu options including International, Arabic, Asian, and Continental cuisines. Our chefs can also create custom menus tailored to your preferences and dietary requirements.",
+            "wedding": "Our wedding packages include menu customization, service staff, elegant presentation, and coordination with your event planner. We create magical culinary experiences for your special day.",
+            "corporate": "Corporate catering includes executive lunches, conferences, product launches, and team events. We ensure professional service and quality that reflects your company standards.",
+            "contact": "You can reach us at: Phone: +971 2 555 1234, WhatsApp: +971 50 123 4567, Email: info@goldenglobecatering.com, or visit us at M38, Industrial Area, Mussaffah, Abu Dhabi.",
+            "default": "Thank you for your interest! For detailed information, please contact our team directly at +971 2 555 1234 or fill out our contact form. Would you like me to help with anything else?"
         };
         
         function sendMessage() {
@@ -2222,9 +2244,9 @@ const luxuryHTML = `<!DOCTYPE html>
                 } else if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('address') || lowerMessage.includes('location')) {
                     response = chatResponses.contact;
                 } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-                    response = 'Hello! Welcome to Golden Globe Catering. How can I assist you today? You can ask about our services, pricing, booking process, or menu options.';
+                    response = "Hello! Welcome to Golden Globe Catering. How can I assist you today? You can ask about our services, pricing, booking process, or menu options.";
                 } else if (lowerMessage.includes('thank')) {
-                    response = 'You\'re welcome! Is there anything else I can help you with? Feel free to contact our team for more personalized assistance.';
+                    response = "You are welcome! Is there anything else I can help you with? Feel free to contact our team for more personalized assistance.";
                 }
                 
                 messagesDiv.innerHTML += '<div class="chat-message bot">' + response + '</div>';
