@@ -6,25 +6,535 @@ const app = new Hono()
 // Enable CORS
 app.use('/api/*', cors())
 
-// Main HTML Page - Golden Globe Catering Luxury Website
-const luxuryHTML = `<!DOCTYPE html>
-<html lang="en">
+// Translations for all 3 languages
+const translations = {
+  en: {
+    lang: 'en',
+    dir: 'ltr',
+    meta: {
+      title: 'Golden Globe Catering | Luxury Catering for Elite Events in Abu Dhabi',
+      description: 'Premium luxury catering services in Abu Dhabi & UAE. Corporate events, royal functions, weddings & VIP hospitality. 15+ years excellence. Book your consultation today.',
+      keywords: 'luxury catering Abu Dhabi, premium catering UAE, corporate catering, wedding catering, VIP hospitality, royal events catering, fine dining catering, event catering services'
+    },
+    nav: {
+      home: 'Home',
+      about: 'About',
+      services: 'Services',
+      portfolio: 'Portfolio',
+      reviews: 'Reviews',
+      contact: 'Contact',
+      cta: 'Discover Your Style'
+    },
+    hero: {
+      subtitle: 'Welcome to Excellence',
+      title: 'Luxury Catering for',
+      titleHighlight: 'Elite Events',
+      desc: 'Crafting Unforgettable Culinary Experiences Since 2008',
+      categories: ['CORPORATE', 'ROYAL', 'GOVERNMENT', 'VIP HOSPITALITY'],
+      btnPrimary: 'Request a Proposal',
+      btnSecondary: 'View Our Events',
+      scroll: 'Scroll'
+    },
+    about: {
+      subtitle: 'About Us',
+      title: 'We Do Not Just Cater Events — We Craft Experiences',
+      p1: 'Golden Globe Catering Services is one of the leading catering services in Abu Dhabi, where we open our doors to all with a steadfast commitment to delivering unparalleled hospitality services.',
+      p2: 'From our beginnings in Catering Services and Fine Dining Restaurants to offering Catering-related Consultancy services, we have continuously evolved to meet the ever-changing needs of our valued patrons.',
+      p3: 'We have successfully expanded our presence across the United Arab Emirates, serving corporate functions, government events, luxury weddings, private VIP gatherings, and large-scale international occasions.',
+      stats: {
+        years: 'Years Experience',
+        events: 'Events Served',
+        guests: 'Happy Guests'
+      }
+    },
+    vision: {
+      subtitle: 'Our Purpose',
+      title: 'Vision & Mission',
+      visionTitle: 'Our Vision',
+      visionText: 'To lead in delivering exceptional hospitality experiences and redefine industry standards. We envision Golden Globe Catering as the first choice for VIP, corporate, and high-profile events, where quality, discretion, and elegance are non-negotiable.',
+      missionTitle: 'Our Mission',
+      missionText: 'Consistently provide top-tier hospitality services, from fine dining to industrial catering and beyond, while prioritizing excellence, innovation, and customer satisfaction.'
+    },
+    services: {
+      subtitle: 'What We Offer',
+      title: 'Our Premium Services',
+      desc: 'From intimate gatherings to grand celebrations, we deliver excellence at every scale',
+      items: [
+        { title: 'Corporate Catering', desc: 'Executive lunches, conferences, product launches, and corporate gatherings with impeccable service.' },
+        { title: 'Royal & Government Events', desc: 'Prestigious events requiring the highest level of discretion, security, and culinary excellence.' },
+        { title: 'Weddings & Private Functions', desc: 'Creating magical moments with bespoke menus and elegant presentation for your special celebrations.' },
+        { title: 'VIP Hospitality & Lounge', desc: 'Exclusive dining experiences and premium lounge services for distinguished guests.' },
+        { title: 'Mega Outdoor Events', desc: 'Luxurious tents, state-of-the-art facilities, and impeccable catering for large-scale celebrations.' },
+        { title: 'Industrial & Labour Camp', desc: 'Nutritious, quality meals delivered consistently for workforce accommodations.' }
+      ]
+    },
+    portfolio: {
+      subtitle: 'Our Work',
+      title: 'Signature Events',
+      desc: 'A glimpse into our world of culinary excellence and event perfection',
+      viewEvent: 'View Event'
+    },
+    quiz: {
+      title: 'Discover Your Event Style',
+      desc: 'Take our 30-second luxury experience quiz and receive a complimentary VIP consultation',
+      start: 'Start Your Journey',
+      q1: 'What type of event are you planning?',
+      q2: 'How many guests are you expecting?',
+      q3: 'What\'s your preferred style?',
+      q4: 'What cuisine interests you most?',
+      options: {
+        corporate: 'Corporate Event',
+        wedding: 'Wedding',
+        government: 'Government/Royal',
+        private: 'Private Party',
+        under50: 'Under 50',
+        medium: '50 - 150',
+        large: '150 - 500',
+        mega: '500+',
+        classic: 'Classic Elegant',
+        modern: 'Modern Chic',
+        royal: 'Royal Luxe',
+        cultural: 'Cultural Traditional',
+        international: 'International',
+        arabic: 'Arabic',
+        asian: 'Asian Fusion',
+        mixed: 'Mix of Everything'
+      },
+      reward: 'Your VIP Reward',
+      rewardText: 'Complimentary Menu Consultation + Priority Booking',
+      bookConsultation: 'Book Your Consultation'
+    },
+    reviews: {
+      subtitle: 'Client Testimonials',
+      title: 'What Our Clients Say',
+      readMore: 'Read More Reviews',
+      items: [
+        { name: 'Ahmed Hassan', text: 'Exceptional service from start to finish. Golden Globe catered our corporate event with absolute professionalism. The food quality and presentation exceeded all expectations.' },
+        { name: 'Sarah Khan', text: 'They made our wedding absolutely magical! Every detail was perfect, and our guests couldn\'t stop talking about the incredible food. Highly recommend!' },
+        { name: 'Mohammed Rahman', text: 'We\'ve used Golden Globe for multiple government events. Their discretion, reliability, and quality are unmatched. A truly premium catering service.' }
+      ]
+    },
+    contact: {
+      subtitle: 'Get in Touch',
+      title: 'Let\'s Create Something Extraordinary',
+      desc: 'Whether you\'re planning an intimate gathering or a grand celebration, our team is ready to bring your vision to life.',
+      formTitle: 'Private Consultation Request',
+      name: 'Your Name',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      eventType: 'Event Type',
+      eventDate: 'Event Date',
+      guests: 'Number of Guests',
+      message: 'Your Message',
+      submit: 'Submit Request',
+      selectEvent: 'Select Event Type',
+      eventTypes: ['Corporate Event', 'Wedding', 'Government/Royal', 'Private Function', 'Mega Outdoor Event', 'Other']
+    },
+    footer: {
+      desc: 'Luxury catering services delivering exceptional culinary experiences for elite events across the UAE.',
+      quickLinks: 'Quick Links',
+      services: 'Services',
+      contact: 'Contact',
+      copyright: '© 2024 Golden Globe Catering. All Rights Reserved.',
+      crafted: 'Crafted with'
+    },
+    chat: {
+      title: 'Golden Globe Assistant',
+      status: 'Online • AI Powered',
+      welcome: 'Welcome to Golden Globe Catering! 👋 I\'m your AI assistant. How can I help you today?',
+      helpWith: 'You can ask me about:',
+      topics: ['Our services', 'Booking process', 'Menu options', 'Pricing information', 'Event planning'],
+      placeholder: 'Type your message...'
+    }
+  },
+  ar: {
+    lang: 'ar',
+    dir: 'rtl',
+    meta: {
+      title: 'جولدن جلوب للتموين | خدمات تموين فاخرة للفعاليات الراقية في أبوظبي',
+      description: 'خدمات تموين فاخرة ومتميزة في أبوظبي والإمارات. فعاليات الشركات، المناسبات الملكية، حفلات الزفاف وضيافة كبار الشخصيات. أكثر من 15 عاماً من التميز.',
+      keywords: 'تموين فاخر أبوظبي، تموين متميز الإمارات، تموين الشركات، تموين حفلات الزفاف، ضيافة VIP، تموين المناسبات الملكية'
+    },
+    nav: {
+      home: 'الرئيسية',
+      about: 'من نحن',
+      services: 'خدماتنا',
+      portfolio: 'أعمالنا',
+      reviews: 'آراء العملاء',
+      contact: 'اتصل بنا',
+      cta: 'اكتشف أسلوبك'
+    },
+    hero: {
+      subtitle: 'مرحباً بكم في عالم التميز',
+      title: 'تموين فاخر لـ',
+      titleHighlight: 'الفعاليات الراقية',
+      desc: 'نصنع تجارب طهي لا تُنسى منذ عام 2008',
+      categories: ['الشركات', 'الملكية', 'الحكومية', 'ضيافة VIP'],
+      btnPrimary: 'اطلب عرض سعر',
+      btnSecondary: 'شاهد فعالياتنا',
+      scroll: 'مرر للأسفل'
+    },
+    about: {
+      subtitle: 'من نحن',
+      title: 'نحن لا نقدم الطعام فقط — نصنع التجارب',
+      p1: 'جولدن جلوب لخدمات التموين هي واحدة من الشركات الرائدة في مجال التموين في أبوظبي، حيث نفتح أبوابنا للجميع مع التزام راسخ بتقديم خدمات ضيافة لا مثيل لها.',
+      p2: 'من بداياتنا في خدمات التموين والمطاعم الفاخرة إلى تقديم خدمات الاستشارات المتعلقة بالتموين، تطورنا باستمرار لتلبية الاحتياجات المتغيرة لعملائنا الكرام.',
+      p3: 'نجحنا في توسيع حضورنا في جميع أنحاء الإمارات العربية المتحدة، لخدمة الفعاليات المؤسسية والحكومية وحفلات الزفاف الفاخرة والتجمعات الخاصة لكبار الشخصيات.',
+      stats: {
+        years: 'سنوات الخبرة',
+        events: 'فعالية منظمة',
+        guests: 'ضيف سعيد'
+      }
+    },
+    vision: {
+      subtitle: 'هدفنا',
+      title: 'الرؤية والرسالة',
+      visionTitle: 'رؤيتنا',
+      visionText: 'أن نكون الرواد في تقديم تجارب ضيافة استثنائية وإعادة تعريف معايير الصناعة. نتصور جولدن جلوب للتموين كالخيار الأول لفعاليات كبار الشخصيات والشركات.',
+      missionTitle: 'رسالتنا',
+      missionText: 'تقديم خدمات ضيافة من الدرجة الأولى بشكل مستمر، من المطاعم الفاخرة إلى التموين الصناعي، مع إعطاء الأولوية للتميز والابتكار ورضا العملاء.'
+    },
+    services: {
+      subtitle: 'ما نقدمه',
+      title: 'خدماتنا المتميزة',
+      desc: 'من التجمعات الحميمة إلى الاحتفالات الكبرى، نقدم التميز في كل المستويات',
+      items: [
+        { title: 'تموين الشركات', desc: 'غداء تنفيذي، مؤتمرات، إطلاق منتجات، وتجمعات الشركات بخدمة لا تشوبها شائبة.' },
+        { title: 'الفعاليات الملكية والحكومية', desc: 'فعاليات مرموقة تتطلب أعلى مستويات السرية والأمان والتميز في الطهي.' },
+        { title: 'حفلات الزفاف والمناسبات الخاصة', desc: 'خلق لحظات سحرية مع قوائم طعام مخصصة وعرض أنيق لاحتفالاتكم الخاصة.' },
+        { title: 'ضيافة VIP والصالات', desc: 'تجارب طعام حصرية وخدمات صالات متميزة للضيوف المميزين.' },
+        { title: 'الفعاليات الخارجية الكبرى', desc: 'خيام فاخرة ومرافق حديثة وتموين لا تشوبه شائبة للاحتفالات الكبيرة.' },
+        { title: 'التموين الصناعي وسكن العمال', desc: 'وجبات مغذية وعالية الجودة تُقدم بشكل مستمر لمرافق الإقامة.' }
+      ]
+    },
+    portfolio: {
+      subtitle: 'أعمالنا',
+      title: 'فعاليات مميزة',
+      desc: 'لمحة عن عالمنا من التميز في الطهي وإتقان الفعاليات',
+      viewEvent: 'عرض الفعالية'
+    },
+    quiz: {
+      title: 'اكتشف أسلوب فعاليتك',
+      desc: 'خذ اختبارنا السريع واحصل على استشارة VIP مجانية',
+      start: 'ابدأ رحلتك',
+      q1: 'ما نوع الفعالية التي تخطط لها؟',
+      q2: 'كم عدد الضيوف المتوقع؟',
+      q3: 'ما هو أسلوبك المفضل؟',
+      q4: 'ما المطبخ الذي يثير اهتمامك؟',
+      options: {
+        corporate: 'فعالية شركات',
+        wedding: 'حفل زفاف',
+        government: 'حكومية/ملكية',
+        private: 'حفلة خاصة',
+        under50: 'أقل من 50',
+        medium: '50 - 150',
+        large: '150 - 500',
+        mega: '+500',
+        classic: 'كلاسيكي أنيق',
+        modern: 'عصري أنيق',
+        royal: 'ملكي فاخر',
+        cultural: 'تراثي ثقافي',
+        international: 'دولي',
+        arabic: 'عربي',
+        asian: 'آسيوي',
+        mixed: 'مزيج من كل شيء'
+      },
+      reward: 'مكافأتك VIP',
+      rewardText: 'استشارة قائمة طعام مجانية + أولوية الحجز',
+      bookConsultation: 'احجز استشارتك'
+    },
+    reviews: {
+      subtitle: 'آراء العملاء',
+      title: 'ماذا يقول عملاؤنا',
+      readMore: 'اقرأ المزيد من الآراء',
+      items: [
+        { name: 'أحمد حسن', text: 'خدمة استثنائية من البداية إلى النهاية. قدم جولدن جلوب خدمات التموين لفعاليتنا المؤسسية باحترافية مطلقة. جودة الطعام والعرض تجاوزت كل التوقعات.' },
+        { name: 'سارة خان', text: 'جعلوا حفل زفافنا سحرياً تماماً! كل تفصيل كان مثالياً، ولم يتوقف ضيوفنا عن الحديث عن الطعام الرائع. أوصي بهم بشدة!' },
+        { name: 'محمد رحمن', text: 'استخدمنا جولدن جلوب لعدة فعاليات حكومية. سريتهم وموثوقيتهم وجودتهم لا مثيل لها. خدمة تموين متميزة حقاً.' }
+      ]
+    },
+    contact: {
+      subtitle: 'تواصل معنا',
+      title: 'لنصنع شيئاً استثنائياً معاً',
+      desc: 'سواء كنت تخطط لتجمع حميم أو احتفال كبير، فريقنا جاهز لتحقيق رؤيتك.',
+      formTitle: 'طلب استشارة خاصة',
+      name: 'اسمك',
+      email: 'البريد الإلكتروني',
+      phone: 'رقم الهاتف',
+      eventType: 'نوع الفعالية',
+      eventDate: 'تاريخ الفعالية',
+      guests: 'عدد الضيوف',
+      message: 'رسالتك',
+      submit: 'إرسال الطلب',
+      selectEvent: 'اختر نوع الفعالية',
+      eventTypes: ['فعالية شركات', 'حفل زفاف', 'حكومية/ملكية', 'مناسبة خاصة', 'فعالية خارجية كبيرة', 'أخرى']
+    },
+    footer: {
+      desc: 'خدمات تموين فاخرة تقدم تجارب طهي استثنائية للفعاليات الراقية في جميع أنحاء الإمارات.',
+      quickLinks: 'روابط سريعة',
+      services: 'الخدمات',
+      contact: 'اتصل بنا',
+      copyright: '© 2024 جولدن جلوب للتموين. جميع الحقوق محفوظة.',
+      crafted: 'صُنع بـ'
+    },
+    chat: {
+      title: 'مساعد جولدن جلوب',
+      status: 'متصل • مدعوم بالذكاء الاصطناعي',
+      welcome: 'مرحباً بك في جولدن جلوب للتموين! 👋 أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟',
+      helpWith: 'يمكنك السؤال عن:',
+      topics: ['خدماتنا', 'عملية الحجز', 'خيارات القائمة', 'معلومات الأسعار', 'تخطيط الفعاليات'],
+      placeholder: 'اكتب رسالتك...'
+    }
+  },
+  fr: {
+    lang: 'fr',
+    dir: 'ltr',
+    meta: {
+      title: 'Golden Globe Catering | Traiteur de Luxe pour Événements d\'Élite à Abu Dhabi',
+      description: 'Services de traiteur haut de gamme à Abu Dhabi et aux EAU. Événements d\'entreprise, fonctions royales, mariages et hospitalité VIP. Plus de 15 ans d\'excellence.',
+      keywords: 'traiteur luxe Abu Dhabi, traiteur premium EAU, traiteur entreprise, traiteur mariage, hospitalité VIP, événements royaux'
+    },
+    nav: {
+      home: 'Accueil',
+      about: 'À Propos',
+      services: 'Services',
+      portfolio: 'Portfolio',
+      reviews: 'Avis',
+      contact: 'Contact',
+      cta: 'Découvrez Votre Style'
+    },
+    hero: {
+      subtitle: 'Bienvenue dans l\'Excellence',
+      title: 'Traiteur de Luxe pour',
+      titleHighlight: 'Événements d\'Élite',
+      desc: 'Créer des Expériences Culinaires Inoubliables Depuis 2008',
+      categories: ['ENTREPRISE', 'ROYAL', 'GOUVERNEMENT', 'HOSPITALITÉ VIP'],
+      btnPrimary: 'Demander un Devis',
+      btnSecondary: 'Voir Nos Événements',
+      scroll: 'Défiler'
+    },
+    about: {
+      subtitle: 'À Propos de Nous',
+      title: 'Nous Ne Faisons Pas Que Servir — Nous Créons des Expériences',
+      p1: 'Golden Globe Catering Services est l\'un des principaux services de traiteur à Abu Dhabi, où nous ouvrons nos portes à tous avec un engagement indéfectible à offrir des services d\'hospitalité inégalés.',
+      p2: 'De nos débuts dans les services de restauration et les restaurants gastronomiques à l\'offre de services de conseil en restauration, nous avons continuellement évolué pour répondre aux besoins changeants de nos clients.',
+      p3: 'Nous avons réussi à étendre notre présence dans les Émirats arabes unis, servant des fonctions d\'entreprise, des événements gouvernementaux, des mariages de luxe et des rassemblements VIP privés.',
+      stats: {
+        years: 'Ans d\'Expérience',
+        events: 'Événements Servis',
+        guests: 'Invités Satisfaits'
+      }
+    },
+    vision: {
+      subtitle: 'Notre Mission',
+      title: 'Vision et Mission',
+      visionTitle: 'Notre Vision',
+      visionText: 'Être leader dans la fourniture d\'expériences d\'hospitalité exceptionnelles et redéfinir les standards de l\'industrie. Nous envisageons Golden Globe Catering comme le premier choix pour les événements VIP et d\'entreprise.',
+      missionTitle: 'Notre Mission',
+      missionText: 'Fournir constamment des services d\'hospitalité de premier ordre, de la restauration gastronomique à la restauration industrielle, tout en privilégiant l\'excellence, l\'innovation et la satisfaction client.'
+    },
+    services: {
+      subtitle: 'Ce Que Nous Offrons',
+      title: 'Nos Services Premium',
+      desc: 'Des réunions intimes aux grandes célébrations, nous offrons l\'excellence à toutes les échelles',
+      items: [
+        { title: 'Traiteur d\'Entreprise', desc: 'Déjeuners exécutifs, conférences, lancements de produits et réunions d\'entreprise avec un service impeccable.' },
+        { title: 'Événements Royaux et Gouvernementaux', desc: 'Événements prestigieux nécessitant le plus haut niveau de discrétion, de sécurité et d\'excellence culinaire.' },
+        { title: 'Mariages et Fonctions Privées', desc: 'Créer des moments magiques avec des menus sur mesure et une présentation élégante pour vos célébrations.' },
+        { title: 'Hospitalité VIP et Salon', desc: 'Expériences culinaires exclusives et services de salon premium pour les invités distingués.' },
+        { title: 'Méga Événements en Plein Air', desc: 'Tentes luxueuses, installations modernes et restauration impeccable pour les grandes célébrations.' },
+        { title: 'Restauration Industrielle', desc: 'Repas nutritifs et de qualité livrés de manière constante pour les hébergements de la main-d\'œuvre.' }
+      ]
+    },
+    portfolio: {
+      subtitle: 'Notre Travail',
+      title: 'Événements Signature',
+      desc: 'Un aperçu de notre monde d\'excellence culinaire et de perfection événementielle',
+      viewEvent: 'Voir l\'Événement'
+    },
+    quiz: {
+      title: 'Découvrez Votre Style d\'Événement',
+      desc: 'Faites notre quiz de 30 secondes et recevez une consultation VIP gratuite',
+      start: 'Commencer Votre Voyage',
+      q1: 'Quel type d\'événement planifiez-vous?',
+      q2: 'Combien d\'invités attendez-vous?',
+      q3: 'Quel est votre style préféré?',
+      q4: 'Quelle cuisine vous intéresse?',
+      options: {
+        corporate: 'Événement d\'Entreprise',
+        wedding: 'Mariage',
+        government: 'Gouvernemental/Royal',
+        private: 'Fête Privée',
+        under50: 'Moins de 50',
+        medium: '50 - 150',
+        large: '150 - 500',
+        mega: '500+',
+        classic: 'Classique Élégant',
+        modern: 'Moderne Chic',
+        royal: 'Luxe Royal',
+        cultural: 'Traditionnel Culturel',
+        international: 'International',
+        arabic: 'Arabe',
+        asian: 'Fusion Asiatique',
+        mixed: 'Mélange de Tout'
+      },
+      reward: 'Votre Récompense VIP',
+      rewardText: 'Consultation Menu Gratuite + Réservation Prioritaire',
+      bookConsultation: 'Réserver Votre Consultation'
+    },
+    reviews: {
+      subtitle: 'Témoignages Clients',
+      title: 'Ce Que Disent Nos Clients',
+      readMore: 'Lire Plus d\'Avis',
+      items: [
+        { name: 'Ahmed Hassan', text: 'Service exceptionnel du début à la fin. Golden Globe a assuré le traiteur de notre événement d\'entreprise avec un professionnalisme absolu. La qualité et la présentation ont dépassé toutes les attentes.' },
+        { name: 'Sarah Khan', text: 'Ils ont rendu notre mariage absolument magique! Chaque détail était parfait, et nos invités n\'ont pas cessé de parler de la nourriture incroyable. Je recommande vivement!' },
+        { name: 'Mohammed Rahman', text: 'Nous avons utilisé Golden Globe pour plusieurs événements gouvernementaux. Leur discrétion, fiabilité et qualité sont inégalées. Un service de traiteur vraiment premium.' }
+      ]
+    },
+    contact: {
+      subtitle: 'Contactez-Nous',
+      title: 'Créons Quelque Chose d\'Extraordinaire',
+      desc: 'Que vous planifiiez une réunion intime ou une grande célébration, notre équipe est prête à donner vie à votre vision.',
+      formTitle: 'Demande de Consultation Privée',
+      name: 'Votre Nom',
+      email: 'Adresse Email',
+      phone: 'Numéro de Téléphone',
+      eventType: 'Type d\'Événement',
+      eventDate: 'Date de l\'Événement',
+      guests: 'Nombre d\'Invités',
+      message: 'Votre Message',
+      submit: 'Envoyer la Demande',
+      selectEvent: 'Sélectionner le Type',
+      eventTypes: ['Événement d\'Entreprise', 'Mariage', 'Gouvernemental/Royal', 'Fonction Privée', 'Méga Événement', 'Autre']
+    },
+    footer: {
+      desc: 'Services de traiteur de luxe offrant des expériences culinaires exceptionnelles pour les événements d\'élite aux EAU.',
+      quickLinks: 'Liens Rapides',
+      services: 'Services',
+      contact: 'Contact',
+      copyright: '© 2024 Golden Globe Catering. Tous Droits Réservés.',
+      crafted: 'Créé avec'
+    },
+    chat: {
+      title: 'Assistant Golden Globe',
+      status: 'En ligne • Propulsé par IA',
+      welcome: 'Bienvenue chez Golden Globe Catering! 👋 Je suis votre assistant IA. Comment puis-je vous aider?',
+      helpWith: 'Vous pouvez me demander:',
+      topics: ['Nos services', 'Processus de réservation', 'Options de menu', 'Informations sur les prix', 'Planification d\'événements'],
+      placeholder: 'Tapez votre message...'
+    }
+  }
+};
+
+// Generate HTML for a specific language
+function generateHTML(lang: 'en' | 'ar' | 'fr') {
+  const t = translations[lang];
+  const isRTL = t.dir === 'rtl';
+  
+  return `<!DOCTYPE html>
+<html lang="${t.lang}" dir="${t.dir}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Globe Catering | Luxury Catering for Elite Events</title>
-    <meta name="description" content="Premium catering services for corporate, royal, government, and VIP events. Crafting unforgettable culinary experiences in Abu Dhabi and UAE.">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>${t.meta.title}</title>
+    <meta name="title" content="${t.meta.title}">
+    <meta name="description" content="${t.meta.description}">
+    <meta name="keywords" content="${t.meta.keywords}">
+    <meta name="author" content="Golden Globe Catering">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="${t.lang}">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://goldenglobecatering.com${lang === 'en' ? '' : '/' + lang}">
+    
+    <!-- Alternate Language Links -->
+    <link rel="alternate" hreflang="en" href="https://goldenglobecatering.com">
+    <link rel="alternate" hreflang="ar" href="https://goldenglobecatering.com/ar">
+    <link rel="alternate" hreflang="fr" href="https://goldenglobecatering.com/fr">
+    <link rel="alternate" hreflang="x-default" href="https://goldenglobecatering.com">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://goldenglobecatering.com${lang === 'en' ? '' : '/' + lang}">
+    <meta property="og:title" content="${t.meta.title}">
+    <meta property="og:description" content="${t.meta.description}">
+    <meta property="og:image" content="https://goldenglobecatering.com/og-image.jpg">
+    <meta property="og:locale" content="${lang === 'ar' ? 'ar_AE' : lang === 'fr' ? 'fr_FR' : 'en_US'}">
+    <meta property="og:site_name" content="Golden Globe Catering">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://goldenglobecatering.com${lang === 'en' ? '' : '/' + lang}">
+    <meta property="twitter:title" content="${t.meta.title}">
+    <meta property="twitter:description" content="${t.meta.description}">
+    <meta property="twitter:image" content="https://goldenglobecatering.com/og-image.jpg">
+    
+    <!-- Geo Tags -->
+    <meta name="geo.region" content="AE-AZ">
+    <meta name="geo.placename" content="Abu Dhabi">
+    <meta name="geo.position" content="24.4539;54.3773">
+    <meta name="ICBM" content="24.4539, 54.3773">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CateringService",
+      "name": "Golden Globe Catering",
+      "description": "${t.meta.description}",
+      "url": "https://goldenglobecatering.com",
+      "logo": "https://goldenglobecatering.com/logo.png",
+      "image": "https://goldenglobecatering.com/og-image.jpg",
+      "telephone": "+971-2-555-1234",
+      "email": "info@goldenglobecatering.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "M38, Industrial Area, Mussaffah",
+        "addressLocality": "Abu Dhabi",
+        "addressCountry": "AE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "24.4539",
+        "longitude": "54.3773"
+      },
+      "priceRange": "$$$",
+      "servesCuisine": ["International", "Arabic", "Asian", "Continental"],
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Arab Emirates"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "150"
+      },
+      "sameAs": [
+        "https://www.facebook.com/goldenglobecatering",
+        "https://www.instagram.com/goldenglobecatering",
+        "https://www.linkedin.com/company/goldenglobecatering"
+      ]
+    }
+    </script>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     
     <style>
         :root {
@@ -37,8 +547,8 @@ const luxuryHTML = `<!DOCTYPE html>
             --white: #FFFFFF;
             --white-soft: #F5F5F5;
             --gray: #888888;
-            --font-serif: 'Playfair Display', 'Cormorant Garamond', serif;
-            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: ${isRTL ? "'Noto Sans Arabic', 'Inter', sans-serif" : "'Inter', sans-serif"};
         }
         
         * {
@@ -57,18 +567,51 @@ const luxuryHTML = `<!DOCTYPE html>
             color: var(--white);
             overflow-x: hidden;
             line-height: 1.6;
+            direction: ${t.dir};
         }
         
+        /* RTL Support */
+        ${isRTL ? `
+        .navbar { flex-direction: row-reverse; }
+        .nav-links { flex-direction: row-reverse; }
+        .logo { flex-direction: row-reverse; }
+        .hero-buttons { flex-direction: row-reverse; }
+        .about-container { direction: rtl; }
+        .contact-container { direction: rtl; }
+        .footer-top { direction: rtl; }
+        .vm-container { direction: rtl; }
+        .review-header { flex-direction: row-reverse; }
+        .contact-item { flex-direction: row-reverse; }
+        .chat-header-info { flex-direction: row-reverse; }
+        .chat-message.user { align-self: flex-start; border-radius: 15px 15px 5px 15px; }
+        .chat-message.bot { align-self: flex-end; border-radius: 15px 15px 15px 5px; }
+        ` : ''}
+        
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+        
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-${isRTL ? 'right' : 'left'}: 20px;
         }
-        ::-webkit-scrollbar-track {
-            background: var(--black);
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--charcoal);
+            color: var(--gray);
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 4px;
+        .lang-btn:hover, .lang-btn.active {
+            border-color: var(--gold);
+            color: var(--gold);
         }
         
         /* Preloader */
@@ -85,13 +628,8 @@ const luxuryHTML = `<!DOCTYPE html>
             z-index: 10000;
             transition: opacity 0.8s ease, visibility 0.8s ease;
         }
-        .preloader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .preloader-content {
-            text-align: center;
-        }
+        .preloader.hidden { opacity: 0; visibility: hidden; }
+        .preloader-content { text-align: center; }
         .preloader-logo {
             font-family: var(--font-serif);
             font-size: 2.5rem;
@@ -111,14 +649,8 @@ const luxuryHTML = `<!DOCTYPE html>
             background: linear-gradient(90deg, var(--gold), var(--gold-light));
             animation: loading 2s ease-out forwards;
         }
-        @keyframes loading {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        @keyframes loading { from { width: 0; } to { width: 100%; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         
         /* Navigation */
         .navbar {
@@ -138,7 +670,6 @@ const luxuryHTML = `<!DOCTYPE html>
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
             padding: 15px 60px;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
         .logo {
             font-family: var(--font-serif);
@@ -164,6 +695,7 @@ const luxuryHTML = `<!DOCTYPE html>
             display: flex;
             gap: 40px;
             list-style: none;
+            align-items: center;
         }
         .nav-links a {
             color: var(--white);
@@ -180,18 +712,14 @@ const luxuryHTML = `<!DOCTYPE html>
             content: '';
             position: absolute;
             bottom: 0;
-            left: 0;
+            ${isRTL ? 'right' : 'left'}: 0;
             width: 0;
             height: 1px;
             background: var(--gold);
             transition: width 0.3s ease;
         }
-        .nav-links a:hover {
-            color: var(--gold);
-        }
-        .nav-links a:hover::after {
-            width: 100%;
-        }
+        .nav-links a:hover { color: var(--gold); }
+        .nav-links a:hover::after { width: 100%; }
         .nav-cta {
             background: transparent;
             border: 1px solid var(--gold);
@@ -203,10 +731,7 @@ const luxuryHTML = `<!DOCTYPE html>
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .nav-cta:hover {
-            background: var(--gold);
-            color: var(--black);
-        }
+        .nav-cta:hover { background: var(--gold); color: var(--black); }
         
         /* Mobile Menu */
         .menu-toggle {
@@ -235,10 +760,7 @@ const luxuryHTML = `<!DOCTYPE html>
             visibility: hidden;
             transition: all 0.4s ease;
         }
-        .mobile-menu.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .mobile-menu.active { opacity: 1; visibility: visible; }
         .mobile-menu-content {
             height: 100%;
             display: flex;
@@ -254,8 +776,11 @@ const luxuryHTML = `<!DOCTYPE html>
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        .mobile-menu a:hover {
-            color: var(--gold);
+        .mobile-menu a:hover { color: var(--gold); }
+        .mobile-lang-switcher {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
         }
         
         /* Hero Section */
@@ -296,25 +821,15 @@ const luxuryHTML = `<!DOCTYPE html>
             transform: scale(1);
             animation: kenBurns 8s ease-in-out infinite;
         }
-        .hero-slide.active {
-            opacity: 1;
-        }
-        @keyframes kenBurns {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
-        }
+        .hero-slide.active { opacity: 1; }
+        @keyframes kenBurns { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
         .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(10, 10, 10, 0.6) 0%,
-                rgba(10, 10, 10, 0.4) 50%,
-                rgba(10, 10, 10, 0.8) 100%
-            );
+            background: linear-gradient(to bottom, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.8) 100%);
             z-index: 1;
         }
         .hero-content {
@@ -342,9 +857,7 @@ const luxuryHTML = `<!DOCTYPE html>
             opacity: 0;
             animation: fadeInUp 1s ease 0.7s forwards;
         }
-        .hero-title span {
-            color: var(--gold);
-        }
+        .hero-title span { color: var(--gold); }
         .hero-desc {
             font-size: 1.1rem;
             color: var(--gray);
@@ -370,7 +883,7 @@ const luxuryHTML = `<!DOCTYPE html>
         .hero-categories span:not(:last-child)::after {
             content: '•';
             position: absolute;
-            right: -18px;
+            ${isRTL ? 'left' : 'right'}: -18px;
             color: var(--gold);
         }
         .hero-buttons {
@@ -406,14 +919,8 @@ const luxuryHTML = `<!DOCTYPE html>
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: left 0.5s ease;
         }
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-        .btn-primary:hover {
-            background: var(--gold-light);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(201, 169, 98, 0.3);
-        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
         .btn-secondary {
             background: transparent;
             color: var(--white);
@@ -427,19 +934,10 @@ const luxuryHTML = `<!DOCTYPE html>
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .btn-secondary:hover {
-            background: var(--white);
-            color: var(--black);
-        }
+        .btn-secondary:hover { background: var(--white); color: var(--black); }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .scroll-indicator {
             position: absolute;
@@ -466,10 +964,7 @@ const luxuryHTML = `<!DOCTYPE html>
             background: linear-gradient(to bottom, var(--gold), transparent);
             animation: scrollPulse 2s ease-in-out infinite;
         }
-        @keyframes scrollPulse {
-            0%, 100% { opacity: 1; height: 60px; }
-            50% { opacity: 0.5; height: 40px; }
-        }
+        @keyframes scrollPulse { 0%, 100% { opacity: 1; height: 60px; } 50% { opacity: 0.5; height: 40px; } }
         
         /* Gold Divider */
         .gold-divider {
@@ -480,13 +975,8 @@ const luxuryHTML = `<!DOCTYPE html>
         }
         
         /* Section Styles */
-        section {
-            padding: 120px 60px;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
+        section { padding: 120px 60px; }
+        .section-header { text-align: center; margin-bottom: 80px; }
         .section-subtitle {
             font-size: 0.85rem;
             letter-spacing: 4px;
@@ -517,7 +1007,7 @@ const luxuryHTML = `<!DOCTYPE html>
             content: '';
             position: absolute;
             top: 0;
-            right: 0;
+            ${isRTL ? 'left' : 'right'}: 0;
             width: 40%;
             height: 100%;
             background: linear-gradient(45deg, transparent, rgba(201, 169, 98, 0.03));
@@ -530,9 +1020,7 @@ const luxuryHTML = `<!DOCTYPE html>
             gap: 100px;
             align-items: center;
         }
-        .about-image {
-            position: relative;
-        }
+        .about-image { position: relative; }
         .about-image img {
             width: 100%;
             height: 600px;
@@ -541,22 +1029,15 @@ const luxuryHTML = `<!DOCTYPE html>
         .about-image-frame {
             position: absolute;
             top: 30px;
-            left: 30px;
-            right: -30px;
+            ${isRTL ? 'right' : 'left'}: 30px;
+            ${isRTL ? 'left' : 'right'}: -30px;
             bottom: -30px;
             border: 1px solid var(--gold);
             z-index: -1;
         }
-        .about-content {
-            padding-right: 40px;
-        }
-        .about-content .section-subtitle {
-            text-align: left;
-        }
-        .about-content .section-title {
-            text-align: left;
-            margin-bottom: 30px;
-        }
+        .about-content { padding-${isRTL ? 'left' : 'right'}: 40px; }
+        .about-content .section-subtitle { text-align: ${isRTL ? 'right' : 'left'}; }
+        .about-content .section-title { text-align: ${isRTL ? 'right' : 'left'}; margin-bottom: 30px; }
         .about-content p {
             color: var(--gray);
             margin-bottom: 25px;
@@ -571,9 +1052,7 @@ const luxuryHTML = `<!DOCTYPE html>
             padding-top: 50px;
             border-top: 1px solid var(--charcoal);
         }
-        .stat-item {
-            text-align: center;
-        }
+        .stat-item { text-align: center; }
         .stat-number {
             font-family: var(--font-serif);
             font-size: 3rem;
@@ -588,10 +1067,7 @@ const luxuryHTML = `<!DOCTYPE html>
         }
         
         /* Vision & Mission */
-        .vision-mission {
-            background: var(--black);
-            position: relative;
-        }
+        .vision-mission { background: var(--black); position: relative; }
         .vm-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -607,10 +1083,7 @@ const luxuryHTML = `<!DOCTYPE html>
             border: 1px solid var(--charcoal);
             transition: all 0.4s ease;
         }
-        .vm-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
-        }
+        .vm-card:hover { border-color: var(--gold); transform: translateY(-5px); }
         .vm-card::before {
             content: '';
             position: absolute;
@@ -637,15 +1110,10 @@ const luxuryHTML = `<!DOCTYPE html>
             font-size: 2rem;
             margin-bottom: 25px;
         }
-        .vm-card p {
-            color: var(--gray);
-            line-height: 1.8;
-        }
+        .vm-card p { color: var(--gray); line-height: 1.8; }
         
         /* Services Section */
-        .services {
-            background: var(--black-light);
-        }
+        .services { background: var(--black-light); }
         .services-grid {
             max-width: 1400px;
             margin: 0 auto;
@@ -658,7 +1126,6 @@ const luxuryHTML = `<!DOCTYPE html>
             height: 450px;
             overflow: hidden;
             cursor: pointer;
-            group: service;
         }
         .service-card img {
             width: 100%;
@@ -666,21 +1133,14 @@ const luxuryHTML = `<!DOCTYPE html>
             object-fit: cover;
             transition: transform 0.8s ease;
         }
-        .service-card:hover img {
-            transform: scale(1.1);
-        }
+        .service-card:hover img { transform: scale(1.1); }
         .service-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                to top,
-                rgba(10, 10, 10, 0.95) 0%,
-                rgba(10, 10, 10, 0.3) 50%,
-                rgba(10, 10, 10, 0.1) 100%
-            );
+            background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 50%, rgba(10,10,10,0.1) 100%);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -688,12 +1148,7 @@ const luxuryHTML = `<!DOCTYPE html>
             transition: all 0.4s ease;
         }
         .service-card:hover .service-overlay {
-            background: linear-gradient(
-                to top,
-                rgba(201, 169, 98, 0.9) 0%,
-                rgba(10, 10, 10, 0.6) 60%,
-                rgba(10, 10, 10, 0.3) 100%
-            );
+            background: linear-gradient(to top, rgba(201,169,98,0.9) 0%, rgba(10,10,10,0.6) 60%, rgba(10,10,10,0.3) 100%);
         }
         .service-icon {
             font-size: 2rem;
@@ -701,18 +1156,14 @@ const luxuryHTML = `<!DOCTYPE html>
             margin-bottom: 20px;
             transition: color 0.4s ease;
         }
-        .service-card:hover .service-icon {
-            color: var(--black);
-        }
+        .service-card:hover .service-icon { color: var(--black); }
         .service-card h3 {
             font-family: var(--font-serif);
             font-size: 1.5rem;
             margin-bottom: 15px;
             transition: color 0.4s ease;
         }
-        .service-card:hover h3 {
-            color: var(--black);
-        }
+        .service-card:hover h3 { color: var(--black); }
         .service-card p {
             color: var(--gray);
             font-size: 0.9rem;
@@ -721,16 +1172,10 @@ const luxuryHTML = `<!DOCTYPE html>
             transform: translateY(20px);
             transition: all 0.4s ease;
         }
-        .service-card:hover p {
-            opacity: 1;
-            transform: translateY(0);
-            color: var(--black);
-        }
+        .service-card:hover p { opacity: 1; transform: translateY(0); color: var(--black); }
         
-        /* Portfolio / Gallery */
-        .portfolio {
-            background: var(--black);
-        }
+        /* Portfolio */
+        .portfolio { background: var(--black); }
         .portfolio-grid {
             max-width: 1400px;
             margin: 0 auto;
@@ -744,20 +1189,14 @@ const luxuryHTML = `<!DOCTYPE html>
             overflow: hidden;
             cursor: pointer;
         }
-        .portfolio-item.large {
-            grid-column: span 2;
-            grid-row: span 2;
-            height: auto;
-        }
+        .portfolio-item.large { grid-column: span 2; grid-row: span 2; height: auto; }
         .portfolio-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.6s ease;
         }
-        .portfolio-item:hover img {
-            transform: scale(1.1);
-        }
+        .portfolio-item:hover img { transform: scale(1.1); }
         .portfolio-overlay {
             position: absolute;
             top: 0;
@@ -772,21 +1211,11 @@ const luxuryHTML = `<!DOCTYPE html>
             opacity: 0;
             transition: opacity 0.4s ease;
         }
-        .portfolio-item:hover .portfolio-overlay {
-            opacity: 1;
-        }
-        .portfolio-overlay i {
-            font-size: 2rem;
-            color: var(--gold);
-            margin-bottom: 15px;
-        }
-        .portfolio-overlay span {
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+        .portfolio-overlay i { font-size: 2rem; color: var(--gold); margin-bottom: 15px; }
+        .portfolio-overlay span { font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
         
-        /* Experience Quiz */
+        /* Quiz Section */
         .quiz-section {
             background: linear-gradient(135deg, var(--black-light) 0%, var(--black) 100%);
             position: relative;
@@ -832,14 +1261,9 @@ const luxuryHTML = `<!DOCTYPE html>
             font-size: 1.1rem;
         }
         
-        /* Google Reviews */
-        .reviews {
-            background: var(--black-light);
-        }
-        .reviews-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        /* Reviews */
+        .reviews { background: var(--black-light); }
+        .reviews-container { max-width: 1400px; margin: 0 auto; }
         .google-badge {
             display: flex;
             align-items: center;
@@ -847,22 +1271,10 @@ const luxuryHTML = `<!DOCTYPE html>
             gap: 15px;
             margin-bottom: 60px;
         }
-        .google-badge img {
-            height: 40px;
-        }
-        .google-rating {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .google-rating .stars {
-            color: #FBBC04;
-            font-size: 1.2rem;
-        }
-        .google-rating .rating-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
+        .google-badge img { height: 40px; }
+        .google-rating { display: flex; align-items: center; gap: 10px; }
+        .google-rating .stars { color: #FBBC04; font-size: 1.2rem; }
+        .google-rating .rating-text { font-size: 1.5rem; font-weight: 600; }
         .reviews-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -874,10 +1286,7 @@ const luxuryHTML = `<!DOCTYPE html>
             border: 1px solid var(--charcoal);
             transition: all 0.3s ease;
         }
-        .review-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
-        }
+        .review-card:hover { border-color: var(--gold); transform: translateY(-5px); }
         .review-header {
             display: flex;
             align-items: center;
@@ -896,31 +1305,18 @@ const luxuryHTML = `<!DOCTYPE html>
             font-size: 1.2rem;
             color: var(--black);
         }
-        .review-info h4 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-        .review-info .stars {
-            color: #FBBC04;
-            font-size: 0.9rem;
-        }
+        .review-info h4 { font-size: 1rem; margin-bottom: 5px; }
+        .review-info .stars { color: #FBBC04; font-size: 0.9rem; }
         .review-text {
             color: var(--gray);
             font-size: 0.95rem;
             line-height: 1.8;
             font-style: italic;
         }
-        .review-date {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
+        .review-date { margin-top: 20px; font-size: 0.8rem; color: var(--gray); }
         
         /* Contact Section */
-        .contact {
-            background: var(--black);
-            position: relative;
-        }
+        .contact { background: var(--black); position: relative; }
         .contact-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -933,21 +1329,9 @@ const luxuryHTML = `<!DOCTYPE html>
             font-size: 2.5rem;
             margin-bottom: 30px;
         }
-        .contact-info p {
-            color: var(--gray);
-            margin-bottom: 40px;
-            line-height: 1.8;
-        }
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .contact-info p { color: var(--gray); margin-bottom: 40px; line-height: 1.8; }
+        .contact-details { display: flex; flex-direction: column; gap: 25px; }
+        .contact-item { display: flex; align-items: center; gap: 20px; }
         .contact-item i {
             width: 50px;
             height: 50px;
@@ -959,9 +1343,7 @@ const luxuryHTML = `<!DOCTYPE html>
             color: var(--gold);
             font-size: 1.1rem;
         }
-        .contact-item span {
-            color: var(--white-soft);
-        }
+        .contact-item span { color: var(--white-soft); }
         .contact-form {
             background: var(--black-light);
             padding: 50px;
@@ -973,9 +1355,7 @@ const luxuryHTML = `<!DOCTYPE html>
             margin-bottom: 30px;
             text-align: center;
         }
-        .form-group {
-            margin-bottom: 25px;
-        }
+        .form-group { margin-bottom: 25px; }
         .form-group label {
             display: block;
             font-size: 0.85rem;
@@ -984,9 +1364,7 @@ const luxuryHTML = `<!DOCTYPE html>
             color: var(--gray);
             margin-bottom: 10px;
         }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 15px 20px;
             background: var(--black);
@@ -996,21 +1374,12 @@ const luxuryHTML = `<!DOCTYPE html>
             font-size: 1rem;
             transition: border-color 0.3s ease;
         }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--gold);
         }
-        .form-group textarea {
-            height: 120px;
-            resize: none;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        .form-group textarea { height: 120px; resize: none; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-submit {
             width: 100%;
             padding: 18px;
@@ -1024,9 +1393,7 @@ const luxuryHTML = `<!DOCTYPE html>
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .form-submit:hover {
-            background: var(--gold-light);
-        }
+        .form-submit:hover { background: var(--gold-light); }
         
         /* Footer */
         .footer {
@@ -1034,10 +1401,7 @@ const luxuryHTML = `<!DOCTYPE html>
             padding: 80px 60px 30px;
             border-top: 1px solid var(--charcoal);
         }
-        .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .footer-container { max-width: 1400px; margin: 0 auto; }
         .footer-top {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -1045,9 +1409,7 @@ const luxuryHTML = `<!DOCTYPE html>
             padding-bottom: 60px;
             border-bottom: 1px solid var(--charcoal);
         }
-        .footer-brand {
-            max-width: 350px;
-        }
+        .footer-brand { max-width: 350px; }
         .footer-logo {
             font-family: var(--font-serif);
             font-size: 2rem;
@@ -1057,15 +1419,8 @@ const luxuryHTML = `<!DOCTYPE html>
             align-items: center;
             gap: 12px;
         }
-        .footer-brand p {
-            color: var(--gray);
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
+        .footer-brand p { color: var(--gray); line-height: 1.8; margin-bottom: 30px; }
+        .social-links { display: flex; gap: 15px; }
         .social-links a {
             width: 45px;
             height: 45px;
@@ -1077,47 +1432,35 @@ const luxuryHTML = `<!DOCTYPE html>
             color: var(--white);
             transition: all 0.3s ease;
         }
-        .social-links a:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
+        .social-links a:hover { border-color: var(--gold); color: var(--gold); }
         .footer-column h4 {
             font-family: var(--font-serif);
             font-size: 1.2rem;
             margin-bottom: 25px;
             color: var(--white);
         }
-        .footer-column ul {
-            list-style: none;
-        }
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
         .footer-column ul a {
             color: var(--gray);
             text-decoration: none;
             font-size: 0.95rem;
             transition: color 0.3s ease;
         }
-        .footer-column ul a:hover {
-            color: var(--gold);
-        }
+        .footer-column ul a:hover { color: var(--gold); }
         .footer-bottom {
             padding-top: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .footer-bottom p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
+        .footer-bottom p { color: var(--gray); font-size: 0.9rem; }
         
-        /* Chat & WhatsApp Buttons */
+        /* Floating Buttons */
         .floating-buttons {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            ${isRTL ? 'left' : 'right'}: 30px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -1134,29 +1477,18 @@ const luxuryHTML = `<!DOCTYPE html>
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: none;
         }
-        .whatsapp-btn {
-            background: #25D366;
-            color: white;
-        }
-        .whatsapp-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-        }
-        .chat-btn {
-            background: var(--gold);
-            color: var(--black);
-        }
-        .chat-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(201, 169, 98, 0.4);
-        }
+        .whatsapp-btn { background: #25D366; color: white; }
+        .whatsapp-btn:hover { transform: scale(1.1); }
+        .chat-btn { background: var(--gold); color: var(--black); }
+        .chat-btn:hover { transform: scale(1.1); }
         
-        /* AI Chat Widget */
+        /* Chat Widget */
         .chat-widget {
             position: fixed;
             bottom: 110px;
-            right: 30px;
+            ${isRTL ? 'left' : 'right'}: 30px;
             width: 380px;
             max-height: 550px;
             background: var(--black-light);
@@ -1170,11 +1502,7 @@ const luxuryHTML = `<!DOCTYPE html>
             transition: all 0.3s ease;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
-        .chat-widget.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+        .chat-widget.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .chat-header {
             background: var(--gold);
             color: var(--black);
@@ -1183,11 +1511,7 @@ const luxuryHTML = `<!DOCTYPE html>
             justify-content: space-between;
             align-items: center;
         }
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .chat-header-info { display: flex; align-items: center; gap: 12px; }
         .chat-avatar {
             width: 45px;
             height: 45px;
@@ -1198,14 +1522,8 @@ const luxuryHTML = `<!DOCTYPE html>
             justify-content: center;
             color: var(--gold);
         }
-        .chat-header h4 {
-            font-size: 1rem;
-            margin-bottom: 3px;
-        }
-        .chat-header span {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
+        .chat-header h4 { font-size: 1rem; margin-bottom: 3px; }
+        .chat-header span { font-size: 0.8rem; opacity: 0.8; }
         .chat-close {
             background: none;
             border: none;
@@ -1255,10 +1573,7 @@ const luxuryHTML = `<!DOCTYPE html>
             color: var(--white);
             font-size: 0.9rem;
         }
-        .chat-input input:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
+        .chat-input input:focus { outline: none; border-color: var(--gold); }
         .chat-input button {
             width: 45px;
             height: 45px;
@@ -1269,9 +1584,7 @@ const luxuryHTML = `<!DOCTYPE html>
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .chat-input button:hover {
-            background: var(--gold-light);
-        }
+        .chat-input button:hover { background: var(--gold-light); }
         
         /* Quiz Modal */
         .quiz-modal {
@@ -1289,10 +1602,7 @@ const luxuryHTML = `<!DOCTYPE html>
             visibility: hidden;
             transition: all 0.4s ease;
         }
-        .quiz-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .quiz-modal.active { opacity: 1; visibility: visible; }
         .quiz-modal-content {
             background: var(--black-light);
             width: 90%;
@@ -1306,16 +1616,14 @@ const luxuryHTML = `<!DOCTYPE html>
         .quiz-modal-close {
             position: absolute;
             top: 20px;
-            right: 20px;
+            ${isRTL ? 'left' : 'right'}: 20px;
             background: none;
             border: none;
             color: var(--white);
             font-size: 1.5rem;
             cursor: pointer;
         }
-        .quiz-progress {
-            margin-bottom: 40px;
-        }
+        .quiz-progress { margin-bottom: 40px; }
         .quiz-progress-bar {
             height: 4px;
             background: var(--charcoal);
@@ -1327,12 +1635,8 @@ const luxuryHTML = `<!DOCTYPE html>
             background: var(--gold);
             transition: width 0.3s ease;
         }
-        .quiz-step {
-            display: none;
-        }
-        .quiz-step.active {
-            display: block;
-        }
+        .quiz-step { display: none; }
+        .quiz-step.active { display: block; }
         .quiz-question {
             font-family: var(--font-serif);
             font-size: 1.8rem;
@@ -1352,8 +1656,7 @@ const luxuryHTML = `<!DOCTYPE html>
             text-align: center;
             transition: all 0.3s ease;
         }
-        .quiz-option:hover,
-        .quiz-option.selected {
+        .quiz-option:hover, .quiz-option.selected {
             border-color: var(--gold);
             background: rgba(201, 169, 98, 0.1);
         }
@@ -1363,9 +1666,7 @@ const luxuryHTML = `<!DOCTYPE html>
             margin-bottom: 10px;
             display: block;
         }
-        .quiz-result {
-            text-align: center;
-        }
+        .quiz-result { text-align: center; }
         .quiz-result-icon {
             width: 100px;
             height: 100px;
@@ -1383,20 +1684,14 @@ const luxuryHTML = `<!DOCTYPE html>
             font-size: 2rem;
             margin-bottom: 15px;
         }
-        .quiz-result p {
-            color: var(--gray);
-            margin-bottom: 30px;
-        }
+        .quiz-result p { color: var(--gray); margin-bottom: 30px; }
         .quiz-reward {
             background: rgba(201, 169, 98, 0.1);
             border: 1px dashed var(--gold);
             padding: 25px;
             margin-top: 20px;
         }
-        .quiz-reward h4 {
-            color: var(--gold);
-            margin-bottom: 10px;
-        }
+        .quiz-reward h4 { color: var(--gold); margin-bottom: 10px; }
         
         /* Lightbox */
         .lightbox {
@@ -1414,25 +1709,18 @@ const luxuryHTML = `<!DOCTYPE html>
             visibility: hidden;
             transition: all 0.3s ease;
         }
-        .lightbox.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .lightbox.active { opacity: 1; visibility: visible; }
         .lightbox-close {
             position: absolute;
             top: 30px;
-            right: 30px;
+            ${isRTL ? 'left' : 'right'}: 30px;
             background: none;
             border: none;
             color: var(--white);
             font-size: 2rem;
             cursor: pointer;
         }
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90vh;
-            object-fit: contain;
-        }
+        .lightbox img { max-width: 90%; max-height: 90vh; object-fit: contain; }
         
         /* Responsive */
         @media (max-width: 1200px) {
@@ -1452,7 +1740,7 @@ const luxuryHTML = `<!DOCTYPE html>
             .mobile-menu { display: block; }
             .about-container { grid-template-columns: 1fr; gap: 50px; }
             .about-image { order: -1; }
-            .about-content { padding-right: 0; }
+            .about-content { padding: 0; }
             .vm-container { grid-template-columns: 1fr; }
             .reviews-grid { grid-template-columns: 1fr; }
             .contact-container { grid-template-columns: 1fr; }
@@ -1474,8 +1762,9 @@ const luxuryHTML = `<!DOCTYPE html>
             .footer-brand { max-width: 100%; }
             .social-links { justify-content: center; }
             .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
-            .chat-widget { width: calc(100% - 30px); right: 15px; bottom: 100px; }
+            .chat-widget { width: calc(100% - 30px); ${isRTL ? 'left' : 'right'}: 15px; bottom: 100px; }
             .quiz-options { grid-template-columns: 1fr; }
+            .lang-switcher { display: none; }
         }
     </style>
 </head>
@@ -1483,12 +1772,8 @@ const luxuryHTML = `<!DOCTYPE html>
     <!-- Preloader -->
     <div class="preloader">
         <div class="preloader-content">
-            <div class="preloader-logo">
-                <i class="fas fa-globe"></i> Golden Globe
-            </div>
-            <div class="preloader-bar">
-                <div class="preloader-progress"></div>
-            </div>
+            <div class="preloader-logo"><i class="fas fa-globe"></i> Golden Globe</div>
+            <div class="preloader-bar"><div class="preloader-progress"></div></div>
         </div>
     </div>
 
@@ -1499,31 +1784,38 @@ const luxuryHTML = `<!DOCTYPE html>
             Golden Globe
         </a>
         <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home">${t.nav.home}</a></li>
+            <li><a href="#about">${t.nav.about}</a></li>
+            <li><a href="#services">${t.nav.services}</a></li>
+            <li><a href="#portfolio">${t.nav.portfolio}</a></li>
+            <li><a href="#reviews">${t.nav.reviews}</a></li>
+            <li><a href="#contact">${t.nav.contact}</a></li>
+            <li class="lang-switcher">
+                <a href="/" class="lang-btn ${lang === 'en' ? 'active' : ''}">EN</a>
+                <a href="/ar" class="lang-btn ${lang === 'ar' ? 'active' : ''}">عربي</a>
+                <a href="/fr" class="lang-btn ${lang === 'fr' ? 'active' : ''}">FR</a>
+            </li>
         </ul>
-        <button class="nav-cta" onclick="openQuiz()">Discover Your Style</button>
+        <button class="nav-cta" onclick="openQuiz()">${t.nav.cta}</button>
         <div class="menu-toggle" onclick="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
     </nav>
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <a href="#home" onclick="toggleMobileMenu()">Home</a>
-            <a href="#about" onclick="toggleMobileMenu()">About</a>
-            <a href="#services" onclick="toggleMobileMenu()">Services</a>
-            <a href="#portfolio" onclick="toggleMobileMenu()">Portfolio</a>
-            <a href="#reviews" onclick="toggleMobileMenu()">Reviews</a>
-            <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
-            <button class="btn-primary" onclick="openQuiz(); toggleMobileMenu();">Discover Your Style</button>
+            <a href="#home" onclick="toggleMobileMenu()">${t.nav.home}</a>
+            <a href="#about" onclick="toggleMobileMenu()">${t.nav.about}</a>
+            <a href="#services" onclick="toggleMobileMenu()">${t.nav.services}</a>
+            <a href="#portfolio" onclick="toggleMobileMenu()">${t.nav.portfolio}</a>
+            <a href="#reviews" onclick="toggleMobileMenu()">${t.nav.reviews}</a>
+            <a href="#contact" onclick="toggleMobileMenu()">${t.nav.contact}</a>
+            <div class="mobile-lang-switcher">
+                <a href="/" class="lang-btn ${lang === 'en' ? 'active' : ''}">EN</a>
+                <a href="/ar" class="lang-btn ${lang === 'ar' ? 'active' : ''}">عربي</a>
+                <a href="/fr" class="lang-btn ${lang === 'fr' ? 'active' : ''}">FR</a>
+            </div>
         </div>
     </div>
 
@@ -1539,22 +1831,19 @@ const luxuryHTML = `<!DOCTYPE html>
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
-            <p class="hero-subtitle">Welcome to Excellence</p>
-            <h1 class="hero-title">Luxury Catering for <span>Elite Events</span></h1>
-            <p class="hero-desc">Crafting Unforgettable Culinary Experiences Since 2008</p>
+            <p class="hero-subtitle">${t.hero.subtitle}</p>
+            <h1 class="hero-title">${t.hero.title} <span>${t.hero.titleHighlight}</span></h1>
+            <p class="hero-desc">${t.hero.desc}</p>
             <div class="hero-categories">
-                <span>CORPORATE</span>
-                <span>ROYAL</span>
-                <span>GOVERNMENT</span>
-                <span>VIP HOSPITALITY</span>
+                ${t.hero.categories.map(cat => `<span>${cat}</span>`).join('')}
             </div>
             <div class="hero-buttons">
-                <a href="#contact" class="btn-primary">Request a Proposal</a>
-                <a href="#portfolio" class="btn-secondary">View Our Events</a>
+                <a href="#contact" class="btn-primary">${t.hero.btnPrimary}</a>
+                <a href="#portfolio" class="btn-secondary">${t.hero.btnSecondary}</a>
             </div>
         </div>
         <div class="scroll-indicator">
-            <span>Scroll</span>
+            <span>${t.hero.scroll}</span>
             <div class="scroll-line"></div>
         </div>
     </section>
@@ -1562,28 +1851,28 @@ const luxuryHTML = `<!DOCTYPE html>
     <!-- About Section -->
     <section class="about" id="about">
         <div class="about-container">
-            <div class="about-image" data-aos="fade-right">
+            <div class="about-image" data-aos="fade-${isRTL ? 'left' : 'right'}">
                 <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Luxury Catering">
                 <div class="about-image-frame"></div>
             </div>
-            <div class="about-content" data-aos="fade-left">
-                <p class="section-subtitle">About Us</p>
-                <h2 class="section-title">We Don't Just Cater Events — We Craft Experiences</h2>
-                <p>Golden Globe Catering Services is one of the leading catering services in Abu Dhabi, where we open our doors to all with a steadfast commitment to delivering unparalleled hospitality services.</p>
-                <p>From our beginnings in Catering Services and Fine Dining Restaurants to offering Catering-related Consultancy services, we have continuously evolved to meet the ever-changing needs of our valued patrons.</p>
-                <p>We have successfully expanded our presence across the United Arab Emirates, serving corporate functions, government events, luxury weddings, private VIP gatherings, and large-scale international occasions.</p>
+            <div class="about-content" data-aos="fade-${isRTL ? 'right' : 'left'}">
+                <p class="section-subtitle">${t.about.subtitle}</p>
+                <h2 class="section-title">${t.about.title}</h2>
+                <p>${t.about.p1}</p>
+                <p>${t.about.p2}</p>
+                <p>${t.about.p3}</p>
                 <div class="about-stats">
                     <div class="stat-item">
                         <div class="stat-number">15+</div>
-                        <div class="stat-label">Years Experience</div>
+                        <div class="stat-label">${t.about.stats.years}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">500+</div>
-                        <div class="stat-label">Events Served</div>
+                        <div class="stat-label">${t.about.stats.events}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">50K+</div>
-                        <div class="stat-label">Happy Guests</div>
+                        <div class="stat-label">${t.about.stats.guests}</div>
                     </div>
                 </div>
             </div>
@@ -1593,20 +1882,20 @@ const luxuryHTML = `<!DOCTYPE html>
     <!-- Vision & Mission -->
     <section class="vision-mission">
         <div class="section-header" data-aos="fade-up">
-            <p class="section-subtitle">Our Purpose</p>
-            <h2 class="section-title">Vision & Mission</h2>
+            <p class="section-subtitle">${t.vision.subtitle}</p>
+            <h2 class="section-title">${t.vision.title}</h2>
             <div class="gold-divider"></div>
         </div>
         <div class="vm-container">
             <div class="vm-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="vm-icon"><i class="fas fa-eye"></i></div>
-                <h3>Our Vision</h3>
-                <p>To lead in delivering exceptional hospitality experiences and redefine industry standards. We envision Golden Globe Catering as the first choice for VIP, corporate, and high-profile events, where quality, discretion, and elegance are non-negotiable. We aspire to become the most trusted luxury catering brand, recognized regionally and internationally for excellence, innovation, and elite hospitality standards.</p>
+                <h3>${t.vision.visionTitle}</h3>
+                <p>${t.vision.visionText}</p>
             </div>
             <div class="vm-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="vm-icon"><i class="fas fa-bullseye"></i></div>
-                <h3>Our Mission</h3>
-                <p>Consistently provide top-tier hospitality services, from fine dining to industrial catering and beyond, while prioritizing excellence, innovation, and customer satisfaction. We deliver bespoke catering experiences tailored to each client's unique vision, maintain uncompromising quality in cuisine, service, and presentation, and build long-term relationships based on trust, professionalism, and reliability.</p>
+                <h3>${t.vision.missionTitle}</h3>
+                <p>${t.vision.missionText}</p>
             </div>
         </div>
     </section>
@@ -1614,132 +1903,65 @@ const luxuryHTML = `<!DOCTYPE html>
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="section-header" data-aos="fade-up">
-            <p class="section-subtitle">What We Offer</p>
-            <h2 class="section-title">Our Premium Services</h2>
-            <p class="section-desc">From intimate gatherings to grand celebrations, we deliver excellence at every scale</p>
+            <p class="section-subtitle">${t.services.subtitle}</p>
+            <h2 class="section-title">${t.services.title}</h2>
+            <p class="section-desc">${t.services.desc}</p>
         </div>
         <div class="services-grid">
-            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80" alt="Corporate Catering">
+            ${[
+              { icon: 'fa-building', img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80' },
+              { icon: 'fa-crown', img: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80' },
+              { icon: 'fa-heart', img: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80' },
+              { icon: 'fa-star', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80' },
+              { icon: 'fa-campground', img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80' },
+              { icon: 'fa-utensils', img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80' }
+            ].map((s, i) => `
+            <div class="service-card" data-aos="fade-up" data-aos-delay="${(i+1)*100}">
+                <img src="${s.img}" alt="${t.services.items[i].title}">
                 <div class="service-overlay">
-                    <i class="fas fa-building service-icon"></i>
-                    <h3>Corporate Catering</h3>
-                    <p>Executive lunches, conferences, product launches, and corporate gatherings with impeccable service and presentation.</p>
+                    <i class="fas ${s.icon} service-icon"></i>
+                    <h3>${t.services.items[i].title}</h3>
+                    <p>${t.services.items[i].desc}</p>
                 </div>
-            </div>
-            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80" alt="Royal & Government Events">
-                <div class="service-overlay">
-                    <i class="fas fa-crown service-icon"></i>
-                    <h3>Royal & Government Events</h3>
-                    <p>Prestigious events requiring the highest level of discretion, security, and culinary excellence.</p>
-                </div>
-            </div>
-            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
-                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Weddings & Private Functions">
-                <div class="service-overlay">
-                    <i class="fas fa-heart service-icon"></i>
-                    <h3>Weddings & Private Functions</h3>
-                    <p>Creating magical moments with bespoke menus and elegant presentation for your special celebrations.</p>
-                </div>
-            </div>
-            <div class="service-card" data-aos="fade-up" data-aos-delay="400">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="VIP Hospitality">
-                <div class="service-overlay">
-                    <i class="fas fa-star service-icon"></i>
-                    <h3>VIP Hospitality & Lounge</h3>
-                    <p>Exclusive dining experiences and premium lounge services for distinguished guests.</p>
-                </div>
-            </div>
-            <div class="service-card" data-aos="fade-up" data-aos-delay="500">
-                <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Mega Outdoor Events">
-                <div class="service-overlay">
-                    <i class="fas fa-campground service-icon"></i>
-                    <h3>Mega Outdoor Events</h3>
-                    <p>Luxurious tents, state-of-the-art facilities, and impeccable catering for large-scale outdoor celebrations.</p>
-                </div>
-            </div>
-            <div class="service-card" data-aos="fade-up" data-aos-delay="600">
-                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Industrial Catering">
-                <div class="service-overlay">
-                    <i class="fas fa-utensils service-icon"></i>
-                    <h3>Industrial & Labour Camp</h3>
-                    <p>Nutritious, quality meals delivered consistently for workforce accommodations and industrial facilities.</p>
-                </div>
-            </div>
+            </div>`).join('')}
         </div>
     </section>
 
     <!-- Portfolio Section -->
     <section class="portfolio" id="portfolio">
         <div class="section-header" data-aos="fade-up">
-            <p class="section-subtitle">Our Work</p>
-            <h2 class="section-title">Signature Events</h2>
-            <p class="section-desc">A glimpse into our world of culinary excellence and event perfection</p>
+            <p class="section-subtitle">${t.portfolio.subtitle}</p>
+            <h2 class="section-title">${t.portfolio.title}</h2>
+            <p class="section-desc">${t.portfolio.desc}</p>
         </div>
         <div class="portfolio-grid">
-            <div class="portfolio-item large" data-aos="fade-up" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80" alt="Event 1">
+            ${[
+              { img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80', large: true },
+              { img: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80' },
+              { img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80' },
+              { img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80' },
+              { img: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80' },
+              { img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80' },
+              { img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80' }
+            ].map((p, i) => `
+            <div class="portfolio-item${p.large ? ' large' : ''}" data-aos="fade-up" data-aos-delay="${i*100}" onclick="openLightbox(this)">
+                <img src="${p.img}" alt="Event">
                 <div class="portfolio-overlay">
                     <i class="fas fa-expand"></i>
-                    <span>View Event</span>
+                    <span>${t.portfolio.viewEvent}</span>
                 </div>
-            </div>
-            <div class="portfolio-item" data-aos="fade-up" data-aos-delay="100" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80" alt="Event 2">
-                <div class="portfolio-overlay">
-                    <i class="fas fa-expand"></i>
-                    <span>View Event</span>
-                </div>
-            </div>
-            <div class="portfolio-item" data-aos="fade-up" data-aos-delay="200" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80" alt="Event 3">
-                <div class="portfolio-overlay">
-                    <i class="fas fa-expand"></i>
-                    <span>View Event</span>
-                </div>
-            </div>
-            <div class="portfolio-item" data-aos="fade-up" data-aos-delay="300" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Event 4">
-                <div class="portfolio-overlay">
-                    <i class="fas fa-expand"></i>
-                    <span>View Event</span>
-                </div>
-            </div>
-            <div class="portfolio-item" data-aos="fade-up" data-aos-delay="400" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80" alt="Event 5">
-                <div class="portfolio-overlay">
-                    <i class="fas fa-expand"></i>
-                    <span>View Event</span>
-                </div>
-            </div>
-            <div class="portfolio-item" data-aos="fade-up" data-aos-delay="500" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Event 6">
-                <div class="portfolio-overlay">
-                    <i class="fas fa-expand"></i>
-                    <span>View Event</span>
-                </div>
-            </div>
-            <div class="portfolio-item" data-aos="fade-up" data-aos-delay="600" onclick="openLightbox(this)">
-                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80" alt="Event 7">
-                <div class="portfolio-overlay">
-                    <i class="fas fa-expand"></i>
-                    <span>View Event</span>
-                </div>
-            </div>
+            </div>`).join('')}
         </div>
     </section>
 
     <!-- Quiz Section -->
     <section class="quiz-section">
         <div class="quiz-container" data-aos="fade-up">
-            <div class="quiz-icon">
-                <i class="fas fa-magic"></i>
-            </div>
-            <h2 class="quiz-title">Discover Your Event Style</h2>
-            <p class="quiz-desc">Take our 30-second luxury experience quiz and receive a complimentary VIP consultation for your next event</p>
+            <div class="quiz-icon"><i class="fas fa-magic"></i></div>
+            <h2 class="quiz-title">${t.quiz.title}</h2>
+            <p class="quiz-desc">${t.quiz.desc}</p>
             <button class="btn-primary" onclick="openQuiz()">
-                <i class="fas fa-play"></i>&nbsp;&nbsp;Start Your Journey
+                <i class="fas fa-play"></i>&nbsp;&nbsp;${t.quiz.start}
             </button>
         </div>
     </section>
@@ -1748,78 +1970,34 @@ const luxuryHTML = `<!DOCTYPE html>
     <section class="reviews" id="reviews">
         <div class="reviews-container">
             <div class="section-header" data-aos="fade-up">
-                <p class="section-subtitle">Client Testimonials</p>
-                <h2 class="section-title">What Our Clients Say</h2>
+                <p class="section-subtitle">${t.reviews.subtitle}</p>
+                <h2 class="section-title">${t.reviews.title}</h2>
             </div>
             <div class="google-badge" data-aos="fade-up">
                 <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google">
                 <div class="google-rating">
                     <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                     </div>
                     <span class="rating-text">4.8/5</span>
                 </div>
             </div>
             <div class="reviews-grid">
-                <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+                ${t.reviews.items.map((r, i) => `
+                <div class="review-card" data-aos="fade-up" data-aos-delay="${(i+1)*100}">
                     <div class="review-header">
-                        <div class="review-avatar">AH</div>
+                        <div class="review-avatar">${r.name.split(' ').map(n => n[0]).join('')}</div>
                         <div class="review-info">
-                            <h4>Ahmed Hassan</h4>
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
+                            <h4>${r.name}</h4>
+                            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                         </div>
                     </div>
-                    <p class="review-text">"Exceptional service from start to finish. Golden Globe catered our corporate event with absolute professionalism. The food quality and presentation exceeded all expectations."</p>
-                    <div class="review-date">2 weeks ago</div>
-                </div>
-                <div class="review-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="review-header">
-                        <div class="review-avatar">SK</div>
-                        <div class="review-info">
-                            <h4>Sarah Khan</h4>
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">"They made our wedding absolutely magical! Every detail was perfect, and our guests couldn't stop talking about the incredible food. Highly recommend!"</p>
-                    <div class="review-date">1 month ago</div>
-                </div>
-                <div class="review-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="review-header">
-                        <div class="review-avatar">MR</div>
-                        <div class="review-info">
-                            <h4>Mohammed Rahman</h4>
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">"We've used Golden Globe for multiple government events. Their discretion, reliability, and quality are unmatched. A truly premium catering service."</p>
-                    <div class="review-date">3 weeks ago</div>
-                </div>
+                    <p class="review-text">"${r.text}"</p>
+                </div>`).join('')}
             </div>
             <div style="text-align: center; margin-top: 50px;" data-aos="fade-up">
                 <a href="https://www.google.com/search?q=golden+globe+catering+abu+dhabi+reviews" target="_blank" class="btn-secondary">
-                    <i class="fab fa-google"></i>&nbsp;&nbsp;Read More Reviews
+                    <i class="fab fa-google"></i>&nbsp;&nbsp;${t.reviews.readMore}
                 </a>
             </div>
         </div>
@@ -1828,10 +2006,10 @@ const luxuryHTML = `<!DOCTYPE html>
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="contact-container">
-            <div class="contact-info" data-aos="fade-right">
-                <p class="section-subtitle">Get in Touch</p>
-                <h3>Let's Create Something Extraordinary</h3>
-                <p>Whether you're planning an intimate gathering or a grand celebration, our team is ready to bring your vision to life with excellence and elegance.</p>
+            <div class="contact-info" data-aos="fade-${isRTL ? 'left' : 'right'}">
+                <p class="section-subtitle">${t.contact.subtitle}</p>
+                <h3>${t.contact.title}</h3>
+                <p>${t.contact.desc}</p>
                 <div class="contact-details">
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
@@ -1851,53 +2029,48 @@ const luxuryHTML = `<!DOCTYPE html>
                     </div>
                 </div>
             </div>
-            <div class="contact-form" data-aos="fade-left">
-                <h4>Private Consultation Request</h4>
+            <div class="contact-form" data-aos="fade-${isRTL ? 'right' : 'left'}">
+                <h4>${t.contact.formTitle}</h4>
                 <form id="contactForm" onsubmit="handleFormSubmit(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Your Name</label>
-                            <input type="text" name="name" required placeholder="Full Name">
+                            <label>${t.contact.name}</label>
+                            <input type="text" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" name="email" required placeholder="Email">
+                            <label>${t.contact.email}</label>
+                            <input type="email" name="email" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="tel" name="phone" placeholder="+971 XX XXX XXXX">
+                            <label>${t.contact.phone}</label>
+                            <input type="tel" name="phone">
                         </div>
                         <div class="form-group">
-                            <label>Event Type</label>
+                            <label>${t.contact.eventType}</label>
                             <select name="eventType">
-                                <option value="">Select Event Type</option>
-                                <option value="corporate">Corporate Event</option>
-                                <option value="wedding">Wedding</option>
-                                <option value="government">Government/Royal</option>
-                                <option value="private">Private Function</option>
-                                <option value="outdoor">Mega Outdoor Event</option>
-                                <option value="other">Other</option>
+                                <option value="">${t.contact.selectEvent}</option>
+                                ${t.contact.eventTypes.map(et => `<option value="${et}">${et}</option>`).join('')}
                             </select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Event Date</label>
+                            <label>${t.contact.eventDate}</label>
                             <input type="date" name="date">
                         </div>
                         <div class="form-group">
-                            <label>Number of Guests</label>
-                            <input type="number" name="guests" placeholder="Estimated guests">
+                            <label>${t.contact.guests}</label>
+                            <input type="number" name="guests">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Your Message</label>
-                        <textarea name="message" placeholder="Tell us about your event vision..."></textarea>
+                        <label>${t.contact.message}</label>
+                        <textarea name="message"></textarea>
                     </div>
                     <button type="submit" class="form-submit">
-                        <i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Submit Request
+                        <i class="fas fa-paper-plane"></i>&nbsp;&nbsp;${t.contact.submit}
                     </button>
                 </form>
             </div>
@@ -1909,10 +2082,8 @@ const luxuryHTML = `<!DOCTYPE html>
         <div class="footer-container">
             <div class="footer-top">
                 <div class="footer-brand">
-                    <div class="footer-logo">
-                        <i class="fas fa-globe"></i> Golden Globe
-                    </div>
-                    <p>Luxury catering services delivering exceptional culinary experiences for elite events across the UAE. Excellence in every detail.</p>
+                    <div class="footer-logo"><i class="fas fa-globe"></i> Golden Globe</div>
+                    <p>${t.footer.desc}</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
@@ -1921,27 +2092,23 @@ const luxuryHTML = `<!DOCTYPE html>
                     </div>
                 </div>
                 <div class="footer-column">
-                    <h4>Quick Links</h4>
+                    <h4>${t.footer.quickLinks}</h4>
                     <ul>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#portfolio">Portfolio</a></li>
-                        <li><a href="#reviews">Reviews</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#about">${t.nav.about}</a></li>
+                        <li><a href="#services">${t.nav.services}</a></li>
+                        <li><a href="#portfolio">${t.nav.portfolio}</a></li>
+                        <li><a href="#reviews">${t.nav.reviews}</a></li>
+                        <li><a href="#contact">${t.nav.contact}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>Services</h4>
+                    <h4>${t.footer.services}</h4>
                     <ul>
-                        <li><a href="#">Corporate Catering</a></li>
-                        <li><a href="#">Royal Events</a></li>
-                        <li><a href="#">Weddings</a></li>
-                        <li><a href="#">VIP Hospitality</a></li>
-                        <li><a href="#">Outdoor Events</a></li>
+                        ${t.services.items.slice(0, 5).map(s => `<li><a href="#services">${s.title}</a></li>`).join('')}
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>Contact</h4>
+                    <h4>${t.footer.contact}</h4>
                     <ul>
                         <li><a href="tel:+97125551234">+971 2 555 1234</a></li>
                         <li><a href="mailto:info@goldenglobecatering.com">info@goldenglobecatering.com</a></li>
@@ -1950,18 +2117,18 @@ const luxuryHTML = `<!DOCTYPE html>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Golden Globe Catering. All Rights Reserved.</p>
-                <p>Crafted with <i class="fas fa-heart" style="color: var(--gold);"></i> for Excellence</p>
+                <p>${t.footer.copyright}</p>
+                <p>${t.footer.crafted} <i class="fas fa-heart" style="color: var(--gold);"></i></p>
             </div>
         </div>
     </footer>
 
     <!-- Floating Buttons -->
     <div class="floating-buttons">
-        <a href="https://wa.me/971501234567?text=Hello%20Golden%20Globe%20Catering,%20I%20would%20like%20to%20request%20a%20proposal." target="_blank" class="float-btn whatsapp-btn" title="Chat on WhatsApp">
+        <a href="https://wa.me/971501234567?text=${encodeURIComponent(lang === 'ar' ? 'مرحباً جولدن جلوب للتموين، أود طلب عرض سعر.' : lang === 'fr' ? 'Bonjour Golden Globe Catering, je souhaite demander un devis.' : 'Hello Golden Globe Catering, I would like to request a proposal.')}" target="_blank" class="float-btn whatsapp-btn" title="WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
-        <button class="float-btn chat-btn" onclick="toggleChat()" title="Chat with AI Assistant">
+        <button class="float-btn chat-btn" onclick="toggleChat()" title="Chat">
             <i class="fas fa-comments"></i>
         </button>
     </div>
@@ -1972,27 +2139,18 @@ const luxuryHTML = `<!DOCTYPE html>
             <div class="chat-header-info">
                 <div class="chat-avatar"><i class="fas fa-robot"></i></div>
                 <div>
-                    <h4>Golden Globe Assistant</h4>
-                    <span>Online • AI Powered</span>
+                    <h4>${t.chat.title}</h4>
+                    <span>${t.chat.status}</span>
                 </div>
             </div>
             <button class="chat-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="chat-message bot">
-                Welcome to Golden Globe Catering! 👋 I'm your AI assistant. How can I help you today?
-            </div>
-            <div class="chat-message bot">
-                You can ask me about:
-                <br>• Our services
-                <br>• Booking process
-                <br>• Menu options
-                <br>• Pricing information
-                <br>• Event planning
-            </div>
+            <div class="chat-message bot">${t.chat.welcome}</div>
+            <div class="chat-message bot">${t.chat.helpWith}<br>${t.chat.topics.map(topic => '• ' + topic).join('<br>')}</div>
         </div>
         <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChatKeypress(event)">
+            <input type="text" id="chatInput" placeholder="${t.chat.placeholder}" onkeypress="handleChatKeypress(event)">
             <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -2001,119 +2159,56 @@ const luxuryHTML = `<!DOCTYPE html>
     <div class="quiz-modal" id="quizModal">
         <div class="quiz-modal-content">
             <button class="quiz-modal-close" onclick="closeQuiz()"><i class="fas fa-times"></i></button>
-            
             <div class="quiz-progress">
                 <div class="quiz-progress-bar">
                     <div class="quiz-progress-fill" id="quizProgress" style="width: 25%"></div>
                 </div>
             </div>
-            
-            <!-- Step 1 -->
             <div class="quiz-step active" id="quizStep1">
-                <h3 class="quiz-question">What type of event are you planning?</h3>
+                <h3 class="quiz-question">${t.quiz.q1}</h3>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this, 1, 'corporate')">
-                        <i class="fas fa-building"></i>
-                        <span>Corporate Event</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 1, 'wedding')">
-                        <i class="fas fa-heart"></i>
-                        <span>Wedding</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 1, 'government')">
-                        <i class="fas fa-crown"></i>
-                        <span>Government/Royal</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 1, 'private')">
-                        <i class="fas fa-star"></i>
-                        <span>Private Party</span>
-                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'corporate')"><i class="fas fa-building"></i><span>${t.quiz.options.corporate}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'wedding')"><i class="fas fa-heart"></i><span>${t.quiz.options.wedding}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'government')"><i class="fas fa-crown"></i><span>${t.quiz.options.government}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'private')"><i class="fas fa-star"></i><span>${t.quiz.options.private}</span></div>
                 </div>
             </div>
-            
-            <!-- Step 2 -->
             <div class="quiz-step" id="quizStep2">
-                <h3 class="quiz-question">How many guests are you expecting?</h3>
+                <h3 class="quiz-question">${t.quiz.q2}</h3>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this, 2, 'intimate')">
-                        <i class="fas fa-user-friends"></i>
-                        <span>Under 50</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 2, 'medium')">
-                        <i class="fas fa-users"></i>
-                        <span>50 - 150</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 2, 'large')">
-                        <i class="fas fa-people-group"></i>
-                        <span>150 - 500</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 2, 'mega')">
-                        <i class="fas fa-city"></i>
-                        <span>500+</span>
-                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'intimate')"><i class="fas fa-user-friends"></i><span>${t.quiz.options.under50}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'medium')"><i class="fas fa-users"></i><span>${t.quiz.options.medium}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'large')"><i class="fas fa-people-group"></i><span>${t.quiz.options.large}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'mega')"><i class="fas fa-city"></i><span>${t.quiz.options.mega}</span></div>
                 </div>
             </div>
-            
-            <!-- Step 3 -->
             <div class="quiz-step" id="quizStep3">
-                <h3 class="quiz-question">What's your preferred style?</h3>
+                <h3 class="quiz-question">${t.quiz.q3}</h3>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this, 3, 'classic')">
-                        <i class="fas fa-gem"></i>
-                        <span>Classic Elegant</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 3, 'modern')">
-                        <i class="fas fa-bolt"></i>
-                        <span>Modern Chic</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 3, 'royal')">
-                        <i class="fas fa-crown"></i>
-                        <span>Royal Luxe</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 3, 'cultural')">
-                        <i class="fas fa-mosque"></i>
-                        <span>Cultural Traditional</span>
-                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'classic')"><i class="fas fa-gem"></i><span>${t.quiz.options.classic}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'modern')"><i class="fas fa-bolt"></i><span>${t.quiz.options.modern}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'royal')"><i class="fas fa-crown"></i><span>${t.quiz.options.royal}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'cultural')"><i class="fas fa-mosque"></i><span>${t.quiz.options.cultural}</span></div>
                 </div>
             </div>
-            
-            <!-- Step 4 -->
             <div class="quiz-step" id="quizStep4">
-                <h3 class="quiz-question">What cuisine interests you most?</h3>
+                <h3 class="quiz-question">${t.quiz.q4}</h3>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="selectOption(this, 4, 'international')">
-                        <i class="fas fa-globe"></i>
-                        <span>International</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 4, 'arabic')">
-                        <i class="fas fa-moon"></i>
-                        <span>Arabic</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 4, 'asian')">
-                        <i class="fas fa-utensils"></i>
-                        <span>Asian Fusion</span>
-                    </div>
-                    <div class="quiz-option" onclick="selectOption(this, 4, 'mixed')">
-                        <i class="fas fa-utensil-spoon"></i>
-                        <span>Mix of Everything</span>
-                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'international')"><i class="fas fa-globe"></i><span>${t.quiz.options.international}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'arabic')"><i class="fas fa-moon"></i><span>${t.quiz.options.arabic}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'asian')"><i class="fas fa-utensils"></i><span>${t.quiz.options.asian}</span></div>
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'mixed')"><i class="fas fa-utensil-spoon"></i><span>${t.quiz.options.mixed}</span></div>
                 </div>
             </div>
-            
-            <!-- Result -->
             <div class="quiz-step" id="quizResult">
                 <div class="quiz-result">
-                    <div class="quiz-result-icon">
-                        <i class="fas fa-award"></i>
-                    </div>
-                    <h3 id="resultTitle">Royal Elegant</h3>
-                    <p id="resultDesc">Your event style is sophisticated and timeless. You appreciate classic elegance with a touch of grandeur.</p>
-                    <button class="btn-primary" onclick="window.location.href='#contact'; closeQuiz();">
-                        Book Your Consultation
-                    </button>
+                    <div class="quiz-result-icon"><i class="fas fa-award"></i></div>
+                    <h3 id="resultTitle">${t.quiz.options.royal}</h3>
+                    <p id="resultDesc"></p>
+                    <button class="btn-primary" onclick="window.location.href='#contact'; closeQuiz();">${t.quiz.bookConsultation}</button>
                     <div class="quiz-reward">
-                        <h4><i class="fas fa-gift"></i> Your VIP Reward</h4>
-                        <p>Complimentary Menu Consultation + Priority Booking</p>
+                        <h4><i class="fas fa-gift"></i> ${t.quiz.reward}</h4>
+                        <p>${t.quiz.rewardText}</p>
                     </div>
                 </div>
             </div>
@@ -2130,42 +2225,26 @@ const luxuryHTML = `<!DOCTYPE html>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
-        // Initialize AOS when ready
+        // Initialize AOS
         if (typeof AOS !== 'undefined') {
-            AOS.init({
-                duration: 1000,
-                once: true,
-                offset: 100
-            });
+            AOS.init({ duration: 1000, once: true, offset: 100 });
         }
         
-        // Preloader - hide after DOM is ready (don't wait for all images)
-        // Use both DOMContentLoaded and a fallback timeout
+        // Preloader
         function hidePreloader() {
             const preloader = document.querySelector('.preloader');
             if (preloader && !preloader.classList.contains('hidden')) {
                 preloader.classList.add('hidden');
             }
         }
-        
-        // Hide preloader after 2.5 seconds max (fallback)
         setTimeout(hidePreloader, 2500);
-        
-        // Also try to hide when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(hidePreloader, 1500);
-            });
+            document.addEventListener('DOMContentLoaded', () => setTimeout(hidePreloader, 1500));
         } else {
-            // DOM is already ready
             setTimeout(hidePreloader, 1500);
         }
-        
-        // Also hide on window load as backup
-        window.addEventListener('load', () => {
-            setTimeout(hidePreloader, 500);
-        });
-        
+        window.addEventListener('load', () => setTimeout(hidePreloader, 500));
+
         // Navbar Scroll Effect
         window.addEventListener('scroll', () => {
             const navbar = document.querySelector('.navbar');
@@ -2179,152 +2258,85 @@ const luxuryHTML = `<!DOCTYPE html>
         // Hero Slider
         const slides = document.querySelectorAll('.hero-slide');
         let currentSlide = 0;
-        
         function nextSlide() {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
         }
-        
         setInterval(nextSlide, 6000);
         
         // Mobile Menu
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('active');
+            document.getElementById('mobileMenu').classList.toggle('active');
         }
         
         // Chat Widget
         function toggleChat() {
-            const chatWidget = document.getElementById('chatWidget');
-            chatWidget.classList.toggle('active');
+            document.getElementById('chatWidget').classList.toggle('active');
         }
         
-        // Chat Functionality
-        const chatResponses = {
-            "services": "We offer a wide range of premium catering services including Corporate Catering, Royal & Government Events, Weddings, VIP Hospitality, Mega Outdoor Events, and Industrial Catering. Would you like details about any specific service?",
-            "prices": "Our pricing varies based on the event type, guest count, and menu selection. For a personalized quote, please fill out our contact form or call us at +971 2 555 1234.",
-            "booking": "To book our services: 1) Contact us via phone or form, 2) Discuss your requirements, 3) Receive a customized proposal, 4) Confirm your booking. We recommend booking at least 2-4 weeks in advance for larger events.",
-            "menu": "We offer diverse menu options including International, Arabic, Asian, and Continental cuisines. Our chefs can also create custom menus tailored to your preferences and dietary requirements.",
-            "wedding": "Our wedding packages include menu customization, service staff, elegant presentation, and coordination with your event planner. We create magical culinary experiences for your special day.",
-            "corporate": "Corporate catering includes executive lunches, conferences, product launches, and team events. We ensure professional service and quality that reflects your company standards.",
-            "contact": "You can reach us at: Phone: +971 2 555 1234, WhatsApp: +971 50 123 4567, Email: info@goldenglobecatering.com, or visit us at M38, Industrial Area, Mussaffah, Abu Dhabi.",
-            "default": "Thank you for your interest! For detailed information, please contact our team directly at +971 2 555 1234 or fill out our contact form. Would you like me to help with anything else?"
-        };
-        
+        // Chat
         function sendMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
-            
             if (!message) return;
-            
             const messagesDiv = document.getElementById('chatMessages');
-            
-            // Add user message
             messagesDiv.innerHTML += '<div class="chat-message user">' + message + '</div>';
             input.value = '';
-            
-            // Process and respond
             setTimeout(() => {
-                let response = chatResponses.default;
-                const lowerMessage = message.toLowerCase();
-                
-                if (lowerMessage.includes('service') || lowerMessage.includes('offer')) {
-                    response = chatResponses.services;
-                } else if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much')) {
-                    response = chatResponses.prices;
-                } else if (lowerMessage.includes('book') || lowerMessage.includes('reserve')) {
-                    response = chatResponses.booking;
-                } else if (lowerMessage.includes('menu') || lowerMessage.includes('food')) {
-                    response = chatResponses.menu;
-                } else if (lowerMessage.includes('wedding') || lowerMessage.includes('marriage')) {
-                    response = chatResponses.wedding;
-                } else if (lowerMessage.includes('corporate') || lowerMessage.includes('business') || lowerMessage.includes('company')) {
-                    response = chatResponses.corporate;
-                } else if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('address') || lowerMessage.includes('location')) {
-                    response = chatResponses.contact;
-                } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-                    response = "Hello! Welcome to Golden Globe Catering. How can I assist you today? You can ask about our services, pricing, booking process, or menu options.";
-                } else if (lowerMessage.includes('thank')) {
-                    response = "You are welcome! Is there anything else I can help you with? Feel free to contact our team for more personalized assistance.";
-                }
-                
-                messagesDiv.innerHTML += '<div class="chat-message bot">' + response + '</div>';
+                const responses = {
+                    en: "Thank you for your message! Our team will contact you shortly. For immediate assistance, please call +971 2 555 1234.",
+                    ar: "شكراً لرسالتك! سيتواصل معك فريقنا قريباً. للمساعدة الفورية، يرجى الاتصال على +971 2 555 1234.",
+                    fr: "Merci pour votre message! Notre équipe vous contactera bientôt. Pour une assistance immédiate, appelez le +971 2 555 1234."
+                };
+                messagesDiv.innerHTML += '<div class="chat-message bot">' + responses['${lang}'] + '</div>';
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }, 1000);
-            
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
         
         function handleChatKeypress(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+            if (e.key === 'Enter') sendMessage();
         }
         
-        // Quiz Functionality
+        // Quiz
         let quizAnswers = {};
-        
         function openQuiz() {
             document.getElementById('quizModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-        
         function closeQuiz() {
             document.getElementById('quizModal').classList.remove('active');
             document.body.style.overflow = '';
-            // Reset quiz
-            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
             document.getElementById('quizStep1').classList.add('active');
             document.getElementById('quizProgress').style.width = '25%';
-            document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
             quizAnswers = {};
         }
-        
-        function selectOption(element, step, value) {
-            // Remove selected from siblings
-            element.parentElement.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            
+        function selectOption(el, step, value) {
+            el.parentElement.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
             quizAnswers['step' + step] = value;
-            
             setTimeout(() => {
                 if (step < 4) {
                     document.getElementById('quizStep' + step).classList.remove('active');
                     document.getElementById('quizStep' + (step + 1)).classList.add('active');
                     document.getElementById('quizProgress').style.width = ((step + 1) * 25) + '%';
                 } else {
-                    showResult();
+                    document.getElementById('quizStep4').classList.remove('active');
+                    document.getElementById('quizResult').classList.add('active');
+                    document.getElementById('quizProgress').style.width = '100%';
                 }
             }, 300);
         }
         
-        function showResult() {
-            document.getElementById('quizStep4').classList.remove('active');
-            document.getElementById('quizResult').classList.add('active');
-            document.getElementById('quizProgress').style.width = '100%';
-            
-            // Calculate result based on answers
-            const results = {
-                'classic': { title: 'Classic Elegant', desc: 'Your event style is sophisticated and timeless. You appreciate classic elegance with a touch of grandeur. Perfect for formal occasions that demand refined taste.' },
-                'modern': { title: 'Modern Chic', desc: 'Your style is contemporary and sleek. You love clean lines, innovative presentations, and a fresh approach to luxury. Ideal for trendsetting events.' },
-                'royal': { title: 'Royal Luxe', desc: 'You desire nothing but the finest. Opulent, majestic, and extraordinarily elegant - your events are destined to be legendary.' },
-                'cultural': { title: 'Cultural Heritage', desc: 'You value tradition and authenticity. Your events celebrate rich cultural heritage with authentic cuisine and meaningful presentations.' }
-            };
-            
-            const style = quizAnswers.step3 || 'classic';
-            document.getElementById('resultTitle').textContent = results[style].title;
-            document.getElementById('resultDesc').textContent = results[style].desc;
-        }
-        
         // Lightbox
-        function openLightbox(element) {
-            const img = element.querySelector('img');
-            document.getElementById('lightboxImage').src = img.src;
+        function openLightbox(el) {
+            document.getElementById('lightboxImage').src = el.querySelector('img').src;
             document.getElementById('lightbox').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-        
         function closeLightbox() {
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = '';
@@ -2333,69 +2345,82 @@ const luxuryHTML = `<!DOCTYPE html>
         // Form Submit
         function handleFormSubmit(e) {
             e.preventDefault();
-            alert('Thank you for your inquiry! Our team will contact you within 24 hours to discuss your event requirements.');
+            const messages = {
+                en: 'Thank you for your inquiry! Our team will contact you within 24 hours.',
+                ar: 'شكراً لاستفسارك! سيتواصل معك فريقنا خلال 24 ساعة.',
+                fr: 'Merci pour votre demande! Notre équipe vous contactera dans les 24 heures.'
+            };
+            alert(messages['${lang}']);
         }
         
-        // Smooth Scroll for anchor links
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     </script>
 </body>
 </html>`;
+}
 
-// Homepage route
-app.get('/', (c) => {
-  return c.html(luxuryHTML)
-})
+// Routes for each language
+app.get('/', (c) => c.html(generateHTML('en')))
+app.get('/ar', (c) => c.html(generateHTML('ar')))
+app.get('/fr', (c) => c.html(generateHTML('fr')))
 
 // API Routes
-app.get('/api/health', (c) => {
-  return c.json({ status: 'ok', message: 'Golden Globe Catering API is running' })
-})
+app.get('/api/health', (c) => c.json({ status: 'ok' }))
 
-// Contact form API
 app.post('/api/contact', async (c) => {
   const body = await c.req.json()
-  console.log('Contact form submission:', body)
-  return c.json({ 
-    success: true, 
-    message: 'Thank you for your inquiry! Our team will contact you within 24 hours.' 
-  })
+  return c.json({ success: true, message: 'Thank you for your inquiry!' })
 })
 
-// Chat API
-app.post('/api/chat', async (c) => {
-  const { message } = await c.req.json()
-  
-  const responses: Record<string, string> = {
-    'services': 'We offer Corporate Catering, Royal & Government Events, Weddings, VIP Hospitality, Mega Outdoor Events, and Industrial Catering.',
-    'prices': 'Our pricing varies based on event type, guest count, and menu selection. Contact us at +971 2 555 1234 for a personalized quote.',
-    'booking': 'Book by contacting us via phone or form. We recommend booking 2-4 weeks in advance for larger events.',
-    'menu': 'We offer International, Arabic, Asian, and Continental cuisines with custom menu options available.',
-    'contact': 'Phone: +971 2 555 1234, WhatsApp: +971 50 123 4567, Location: M38, Industrial Area, Mussaffah, Abu Dhabi.',
-    'default': 'Thank you for your interest! Contact our team at +971 2 555 1234 for detailed information.'
-  }
-  
-  const lowerMessage = message.toLowerCase()
-  let response = responses.default
-  
-  if (lowerMessage.includes('service')) response = responses.services
-  else if (lowerMessage.includes('price') || lowerMessage.includes('cost')) response = responses.prices
-  else if (lowerMessage.includes('book')) response = responses.booking
-  else if (lowerMessage.includes('menu') || lowerMessage.includes('food')) response = responses.menu
-  else if (lowerMessage.includes('contact') || lowerMessage.includes('phone')) response = responses.contact
-  
-  return c.json({ response })
+// Sitemap for SEO
+app.get('/sitemap.xml', (c) => {
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://goldenglobecatering.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://goldenglobecatering.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://goldenglobecatering.com/ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://goldenglobecatering.com/fr"/>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://goldenglobecatering.com/ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://goldenglobecatering.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://goldenglobecatering.com/ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://goldenglobecatering.com/fr"/>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://goldenglobecatering.com/fr</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://goldenglobecatering.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://goldenglobecatering.com/ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://goldenglobecatering.com/fr"/>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>`
+  return c.text(sitemap, 200, { 'Content-Type': 'application/xml' })
+})
+
+// Robots.txt for SEO
+app.get('/robots.txt', (c) => {
+  const robots = `User-agent: *
+Allow: /
+
+Sitemap: https://goldenglobecatering.com/sitemap.xml`
+  return c.text(robots)
 })
 
 export default app
